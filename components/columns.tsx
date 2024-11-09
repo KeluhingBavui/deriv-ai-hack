@@ -1,8 +1,9 @@
-import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 // import { cn } from "@/lib/utils";
 import { Issue } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
+import { OctagonAlert } from "lucide-react";
 
 export const columns: ColumnDef<Issue>[] = [
   {
@@ -39,7 +40,12 @@ export const columns: ColumnDef<Issue>[] = [
             {issue.sentiment}&nbsp;
             {getSentimentEmoji(issue.sentiment)}
           </Badge>
-          {issue.critical && <Badge variant="destructive">‼️ Critical</Badge>}
+          {issue.critical && (
+            <Badge variant="destructive">
+              <OctagonAlert className="w-3 h-3 mr-1" />
+              Critical
+            </Badge>
+          )}
         </div>
       );
     },
@@ -67,11 +73,14 @@ export const columns: ColumnDef<Issue>[] = [
     cell: ({ row }) => {
       const priority = row.getValue("priority") as string;
       return (
-        <span className="flex items-center gap-1">
+        <Badge
+          variant={getPriorityVariant(priority)}
+          className="flex items-center gap-1 w-fit"
+        >
           {priority === "High" && "↑"}
           {priority === "Low" && "↓"}
           {priority === "Medium" && "→"} {priority}
-        </span>
+        </Badge>
       );
     },
   },
@@ -98,6 +107,19 @@ const getSentimentEmoji = (sentiment: string) => {
       return "😐";
     case "Negative":
       return "😢";
+    default:
+      return "default";
+  }
+};
+
+const getPriorityVariant = (priority: string) => {
+  switch (priority) {
+    case "High":
+      return "destructive";
+    case "Medium":
+      return "default";
+    case "Low":
+      return "secondary";
     default:
       return "default";
   }
