@@ -3,6 +3,7 @@
 import { useIssues } from "@/hooks/useIssues";
 import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { CriticalIssueNotification } from "./CriticalIssueNotification";
 import { DataPipeline } from "./DataPipeline";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
@@ -42,6 +43,8 @@ export default function IssuesTable() {
           Clear Data
         </Button>
       </div>
+
+      <CriticalIssueNotification issues={issues} />
 
       {loading ? (
         <div className="text-center py-4">Loading...</div>
