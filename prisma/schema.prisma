@@ -46,15 +46,17 @@ model Feedback {
 }
 
 model Issue {
-  id          String   @id @default(cuid())
-  sentiment   String   @default("Neutral")
+  id          String    @id @default(cuid())
+  sentiment   String    @default("Neutral")
   source      String
   description String
-  critical    Boolean  @default(false)
+  critical    Boolean   @default(false)
   team        String
-  priority    String   @default("Medium")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  priority    String    @default("Medium")
+  notified    Boolean   @default(false)
+  notifiedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   feedbacks Feedback[] // One-to-many relationship with Feedback, synthesized from multiple feedback entries
 }

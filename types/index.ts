@@ -1,11 +1,13 @@
 export interface Issue {
   id: string;
-  sentiment: 'Positive' | 'Negative' | 'Neutral';
-  source: 'Trust Pilot' | 'Live Chat';
+  sentiment: "Positive" | "Negative" | "Neutral";
+  source: "Trust Pilot" | "Live Chat";
   description: string;
   critical?: boolean;
-  team: 'Finance' | 'Engineering' | 'Support';
-  priority: 'Low' | 'Medium' | 'High';
+  team: "Finance" | "Engineering" | "Support";
+  priority: "Low" | "Medium" | "High";
+  notified: boolean;
+  notifiedAt?: Date;
   tags?: string[];
 }
 
@@ -29,4 +31,4 @@ export interface Feedback {
   createdAt: Date;
   userId: string;
   issueId: string | null;
-} 
+}

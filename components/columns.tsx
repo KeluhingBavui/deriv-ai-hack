@@ -1,9 +1,22 @@
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 // import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Issue } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { OctagonAlert, ArrowDownIcon, ArrowUpIcon, ChevronsUpDown } from "lucide-react";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  Bell,
+  BellRing,
+  ChevronsUpDown,
+  OctagonAlert,
+} from "lucide-react";
 import { Button } from "./ui/button";
 
 export const columns: ColumnDef<Issue>[] = [
@@ -87,11 +100,13 @@ export const columns: ColumnDef<Issue>[] = [
           }}
         >
           Priority
-          {{
-            asc: <ArrowUpIcon className="w-4 h-4 ml-1" />,
-            desc: <ArrowDownIcon className="w-4 h-4 ml-1" />,
-            false: <ChevronsUpDown className="w-4 h-4 ml-1 opacity-50" />,
-          }[column.getIsSorted() as string ?? "false"]}
+          {
+            {
+              asc: <ArrowUpIcon className="w-4 h-4 ml-1" />,
+              desc: <ArrowDownIcon className="w-4 h-4 ml-1" />,
+              false: <ChevronsUpDown className="w-4 h-4 ml-1 opacity-50" />,
+            }[(column.getIsSorted() as string) ?? "false"]
+          }
         </Button>
       );
     },
@@ -110,9 +125,48 @@ export const columns: ColumnDef<Issue>[] = [
     },
     sortingFn: (rowA, rowB) => {
       const priorities = { High: 3, Medium: 2, Low: 1 };
-      const priorityA = priorities[rowA.getValue("priority") as keyof typeof priorities];
-      const priorityB = priorities[rowB.getValue("priority") as keyof typeof priorities];
+      const priorityA =
+        priorities[rowA.getValue("priority") as keyof typeof priorities];
+      const priorityB =
+        priorities[rowB.getValue("priority") as keyof typeof priorities];
       return priorityA - priorityB;
+    },
+  },
+  {
+    accessorKey: "notified",
+    header: "Team Notified",
+    cell: ({ row }) => {
+      const notified = row.getValue("notified") as boolean;
+      const notifiedAt = row.original.notifiedAt as Date | undefined;
+
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center gap-2">
+                {notified ? (
+                  <div className="flex items-center gap-2 text-green-500">
+                    <BellRing className="w-4 h-4" />
+                    <span className="text-xs">Notified</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Bell className="w-4 h-4" />
+                    <span className="text-xs">Pending</span>
+                  </div>
+                )}
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              {notified && notifiedAt ? (
+                <p>Notified on {new Date(notifiedAt).toLocaleString()}</p>
+              ) : (
+                <p>Not yet notified</p>
+              )}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
     },
   },
 ];

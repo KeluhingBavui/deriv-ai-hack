@@ -10,6 +10,8 @@ const issues = [
     critical: false,
     team: "Support",
     priority: "Medium",
+    notified: false,
+    notifiedAt: null,
   },
   {
     sentiment: "Negative",
@@ -18,6 +20,8 @@ const issues = [
     critical: true,
     team: "Finance",
     priority: "High",
+    notified: true,
+    notifiedAt: new Date(),
   },
   {
     sentiment: "Neutral",
@@ -26,6 +30,8 @@ const issues = [
     critical: false,
     team: "Engineering",
     priority: "Low",
+    notified: false,
+    notifiedAt: null,
   },
   {
     sentiment: "Positive",
@@ -34,6 +40,8 @@ const issues = [
     critical: false,
     team: "Engineering",
     priority: "Medium",
+    notified: false,
+    notifiedAt: null,
   },
   {
     sentiment: "Negative",
@@ -42,6 +50,8 @@ const issues = [
     critical: true,
     team: "Engineering",
     priority: "High",
+    notified: true,
+    notifiedAt: new Date(),
   },
   {
     sentiment: "Neutral",
@@ -50,6 +60,8 @@ const issues = [
     critical: false,
     team: "Finance",
     priority: "Low",
+    notified: false,
+    notifiedAt: null,
   },
   {
     sentiment: "Positive",
@@ -58,6 +70,8 @@ const issues = [
     critical: false,
     team: "Engineering",
     priority: "Medium",
+    notified: false,
+    notifiedAt: null,
   },
   {
     sentiment: "Negative",
@@ -66,6 +80,8 @@ const issues = [
     critical: true,
     team: "Engineering",
     priority: "High",
+    notified: true,
+    notifiedAt: new Date(),
   },
 ];
 
