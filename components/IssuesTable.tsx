@@ -122,8 +122,7 @@ export default function IssuesTable() {
                 <span className="flex items-center gap-1">
                   {issue.priority === "High" && "↑"}
                   {issue.priority === "Low" && "↓"}
-                  {issue.priority === "Medium" && "→"}
-                  {issue.priority}
+                  {issue.priority === "Medium" && "→"} {issue.priority}
                 </span>
               </td>
               <td className="px-4 py-3 text-sm">
