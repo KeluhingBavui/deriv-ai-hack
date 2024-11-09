@@ -108,7 +108,15 @@ export function DataPipeline({ onImportComplete }: DataPipelineProps) {
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-semibold">Data Pipeline</h2>
         <Button
-          onClick={() => setIsImporting(true)}
+          onClick={() => {
+            setIsImporting(true);
+            setSteps((prev) =>
+              prev.map((s, i) => ({
+                ...s,
+                status: i === 0 ? "processing" : "waiting",
+              }))
+            );
+          }}
           disabled={isImporting}
           variant="outline"
         >
