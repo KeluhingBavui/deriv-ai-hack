@@ -12,7 +12,7 @@ export function useIssues() {
     if (localStorage.getItem("isDataImported") !== "true") {
       setIssues([]);
       setLoading(false);
-      return;
+      return [];
     }
 
     try {
@@ -20,8 +20,10 @@ export function useIssues() {
       const response = await fetch("/api/issues");
       const data = await response.json();
       setIssues(data);
+      return data;
     } catch (error) {
       console.error("Error fetching issues:", error);
+      return [];
     } finally {
       setLoading(false);
     }
