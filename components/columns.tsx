@@ -152,7 +152,7 @@ export const columns: ColumnDef<Issue>[] = [
                 ) : (
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Bell className="w-4 h-4" />
-                    <span className="text-xs">Pending</span>
+                    <span className="text-xs">Notify</span>
                   </div>
                 )}
               </div>

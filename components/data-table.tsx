@@ -18,11 +18,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 import { Feedback, Issue } from "@/types";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { ExportButton } from "./ExportButton";
 import { FeedbackDetails } from "./FeedbackDetails";
-import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData extends Issue, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -30,8 +30,18 @@ interface DataTableProps<TData extends Issue, TValue> {
 }
 
 // Move helper functions outside of the component
-const hasActiveFilters = (sentiment: string, source: string, team: string, sorting: SortingState) => {
-  return sentiment !== "all" || source !== "all" || team !== "all" || sorting.length > 0;
+const hasActiveFilters = (
+  sentiment: string,
+  source: string,
+  team: string,
+  sorting: SortingState
+) => {
+  return (
+    sentiment !== "all" ||
+    source !== "all" ||
+    team !== "all" ||
+    sorting.length > 0
+  );
 };
 
 export function DataTable<TData extends Issue, TValue>({
@@ -43,7 +53,9 @@ export function DataTable<TData extends Issue, TValue>({
   const [selectedSource, setSelectedSource] = useState<string>("all");
   const [selectedTeam, setSelectedTeam] = useState<string>("all");
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
-  const [feedbackData, setFeedbackData] = useState<Record<string, Feedback[]>>({});
+  const [feedbackData, setFeedbackData] = useState<Record<string, Feedback[]>>(
+    {}
+  );
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const handleReset = () => {
@@ -53,13 +65,20 @@ export function DataTable<TData extends Issue, TValue>({
     setSorting([]);
   };
 
-  const showReset = hasActiveFilters(selectedSentiment, selectedSource, selectedTeam, sorting);
+  const showReset = hasActiveFilters(
+    selectedSentiment,
+    selectedSource,
+    selectedTeam,
+    sorting
+  );
 
   // Filter the data based on selected filters
   const filteredData = useMemo(() => {
     return data.filter((item) => {
-      const matchesSentiment = selectedSentiment === "all" || item.sentiment === selectedSentiment;
-      const matchesSource = selectedSource === "all" || item.source === selectedSource;
+      const matchesSentiment =
+        selectedSentiment === "all" || item.sentiment === selectedSentiment;
+      const matchesSource =
+        selectedSource === "all" || item.source === selectedSource;
       const matchesTeam = selectedTeam === "all" || item.team === selectedTeam;
       return matchesSentiment && matchesSource && matchesTeam;
     });
@@ -113,7 +132,7 @@ export function DataTable<TData extends Issue, TValue>({
     onRowSelectionChange: setRowSelection,
     onSortingChange: (updater) => {
       // If it's a function, call it with current state
-      if (typeof updater === 'function') {
+      if (typeof updater === "function") {
         setSorting(updater(sorting));
       } else {
         // If it's a direct value, use it
@@ -179,18 +198,18 @@ export function DataTable<TData extends Issue, TValue>({
                     ))}
                   </TableRow>
                   <TableRow>
-                    <TableCell 
-                      colSpan={columns.length} 
-                      className="p-0"
-                    >
+                    <TableCell colSpan={columns.length} className="p-0">
                       <div
                         className={cn(
                           "transition-all duration-500 ease-in-out",
-                          expandedRows[row.original.id] ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0 overflow-hidden"
+                          expandedRows[row.original.id]
+                            ? "max-h-[500px] opacity-100"
+                            : "max-h-0 opacity-0 overflow-hidden"
                         )}
                       >
                         <FeedbackDetails
                           feedbackList={feedbackData[row.original.id] || []}
+                          issue={row.original}
                         />
                       </div>
                     </TableCell>
