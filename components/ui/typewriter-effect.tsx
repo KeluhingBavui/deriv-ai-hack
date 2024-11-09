@@ -47,7 +47,7 @@ export const TypewriterEffect = ({
                   }}
                   key={`char-${index}`}
                   className={cn(
-                    "opacity-0 hidden sm:inline-block",
+                    "4opacity-0 hidden sm:inline-block",
                     word.className
                   )}
                 >
