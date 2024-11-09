@@ -78,7 +78,7 @@ export function DataTableToolbar({
         </Select>
 
         {showReset && (
-          <Button variant="ghost" size="lg" onClick={onReset} className="px-4">
+          <Button variant="ghost"   onClick={onReset} className="px-4">
             Reset
             <X className="ml-2 h-4 w-4" />
           </Button>
