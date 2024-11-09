@@ -15,7 +15,9 @@ export async function notifyIssue(issueId: string) {
 
 export async function notifyCriticalIssues(issues: Issue[]) {
   const criticalIssues = issues.filter(
-    (issue) => issue.critical && !issue.notified
+    // commented out for demo purposes
+    // (issue) => issue.critical && !issue.notified
+    (issue) => issue.critical
   );
 
   const notifications = await Promise.all(
@@ -24,6 +26,6 @@ export async function notifyCriticalIssues(issues: Issue[]) {
 
   return {
     notifications: notifications.filter(Boolean),
-    updatedIssues: notifications.filter(Boolean) as Issue[]
+    updatedIssues: criticalIssues.filter(Boolean) as Issue[],
   };
 }

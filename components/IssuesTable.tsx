@@ -4,11 +4,11 @@ import { useIssues } from "@/hooks/useIssues";
 import { notifyCriticalIssues } from "@/lib/notifyIssue";
 import { RefreshCcw } from "lucide-react";
 import { useEffect, useState } from "react";
-import { CriticalIssueNotification } from "./CriticalIssueNotification";
 import { DataPipeline } from "./DataPipeline";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import { Button } from "./ui/button";
+import { CriticalIssueNotification } from "./CriticalIssueNotification";
 
 export default function IssuesTable() {
   const { issues, loading, filteredIssues, fetchIssues } = useIssues();
@@ -24,12 +24,13 @@ export default function IssuesTable() {
   const handleImportComplete = async () => {
     setIsImported(true);
     localStorage.setItem("isDataImported", "true");
-    // Fetch issues after import is complete
     const issues = await fetchIssues();
     if (issues) {
       const { updatedIssues } = await notifyCriticalIssues(issues);
       if (updatedIssues.length > 0) {
-        // Fetch issues again to get the updated state
+        window.alert(
+          `${updatedIssues.length} critical issues have been notified to the response team.`
+        );
         await fetchIssues();
       }
     }
