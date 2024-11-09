@@ -132,29 +132,154 @@ const users = [
   },
 ];
 
+// Add feedback content templates
+const feedbackTemplates = [
+  {
+    content: "The system was down again today",
+    sentiment: "Negative",
+    issueType: "downtime",
+  },
+  {
+    content: "Love the new dashboard features",
+    sentiment: "Positive",
+    issueType: "features",
+  },
+  {
+    content: "Payment processing is still problematic",
+    sentiment: "Negative",
+    issueType: "payment",
+  },
+  {
+    content: "Customer support was very helpful",
+    sentiment: "Positive",
+    issueType: "support",
+  },
+  {
+    content: "The platform could use more advanced trading tools",
+    sentiment: "Neutral",
+    issueType: "features",
+  },
+  {
+    content: "Had trouble resetting my password",
+    sentiment: "Negative",
+    issueType: "access",
+  },
+  {
+    content: "Integration with my tools works great",
+    sentiment: "Positive",
+    issueType: "integration",
+  },
+];
+
+// Generate more users (total 20)
+const generateMoreUsers = () => {
+  const tradingStyles = [
+    "day trading",
+    "swing trading",
+    "position trading",
+    "scalping",
+    "algorithmic trading",
+  ];
+  const expertiseLevels = [
+    "beginner",
+    "intermediate",
+    "expert",
+    "professional",
+  ];
+  const regions = [
+    "North America",
+    "Europe",
+    "Asia",
+    "South America",
+    "Africa",
+    "Oceania",
+  ];
+  const contacts = ["email", "phone", "chat", "social media"];
+  const actions = [
+    "Feature request",
+    "Bug report",
+    "Support ticket",
+    "Tutorial completed",
+    "Settings updated",
+  ];
+
+  const additionalUsers = Array.from({ length: 17 }, () => ({
+    age: Math.floor(Math.random() * (65 - 18) + 18),
+    tradingStyle:
+      tradingStyles[Math.floor(Math.random() * tradingStyles.length)],
+    expertiseLevel:
+      expertiseLevels[Math.floor(Math.random() * expertiseLevels.length)],
+    region: regions[Math.floor(Math.random() * regions.length)],
+    preferredContact: contacts[Math.floor(Math.random() * contacts.length)],
+    platformUsage: Number((Math.random() * 8 + 1).toFixed(1)),
+    npsScore: Math.floor(Math.random() * 11),
+    csatScore: Math.floor(Math.random() * 6),
+    cesScore: Math.floor(Math.random() * 6),
+    recentlyReportedIssue: Math.random() > 0.7,
+    feedbackFrequency: Math.floor(Math.random() * 10),
+    accountAge: Math.floor(Math.random() * 36),
+    lastAction: actions[Math.floor(Math.random() * actions.length)],
+    deltaNps: Number((Math.random() * 2 - 1).toFixed(1)),
+    deltaCsat: Number((Math.random() * 2 - 1).toFixed(1)),
+    deltaCes: Number((Math.random() * 2 - 1).toFixed(1)),
+    simulationDate: new Date(
+      Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000
+    ),
+    lastFeedbackDate: new Date(
+      Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000
+    ),
+  }));
+
+  return [...users, ...additionalUsers];
+};
+
 async function main() {
   console.log("Start seeding...");
 
   // Clear existing data
+  await prisma.feedback.deleteMany();
   await prisma.issue.deleteMany();
   await prisma.user.deleteMany();
 
   // Insert issues
-  for (const issue of issues) {
-    const result = await prisma.issue.create({
-      data: issue,
-    });
-    console.log(`Created issue with id: ${result.id}`);
-  }
+  const createdIssues = await Promise.all(
+    issues.map((issue) => prisma.issue.create({ data: issue }))
+  );
 
   // Insert users
-  for (const user of users) {
-    const result = await prisma.user.create({
-      data: user,
-    });
-    console.log(`Created user with id: ${result.id}`);
-  }
+  const allUsers = generateMoreUsers();
+  const createdUsers = await Promise.all(
+    allUsers.map((user) => prisma.user.create({ data: user }))
+  );
 
+  // Generate and insert feedback
+  const feedbackData = Array.from({ length: 50 }, () => {
+    const user = createdUsers[Math.floor(Math.random() * createdUsers.length)];
+    const issue =
+      Math.random() > 0.3
+        ? createdIssues[Math.floor(Math.random() * createdIssues.length)]
+        : null;
+    const template =
+      feedbackTemplates[Math.floor(Math.random() * feedbackTemplates.length)];
+
+    return {
+      userId: user.id,
+      content: template.content,
+      sentiment: template.sentiment,
+      issueId: issue?.id || null,
+      createdAt: new Date(
+        Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000
+      ),
+    };
+  });
+
+  await Promise.all(
+    feedbackData.map((feedback) => prisma.feedback.create({ data: feedback }))
+  );
+
+  console.log(`Created ${createdIssues.length} issues`);
+  console.log(`Created ${createdUsers.length} users`);
+  console.log(`Created ${feedbackData.length} feedback entries`);
   console.log("Seeding finished.");
 }
 
