@@ -73,7 +73,8 @@ export function DataTableToolbar({
             <SelectItem value="all">All Teams</SelectItem>
             <SelectItem value="Finance">Finance</SelectItem>
             <SelectItem value="Engineering">Engineering</SelectItem>
-            <SelectItem value="Support">Support</SelectItem>
+            <SelectItem value="Product">Product</SelectItem>
+            <SelectItem value="Risk and Compliance">Risk and Compliance</SelectItem>
           </SelectContent>
         </Select>
 

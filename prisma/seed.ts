@@ -176,7 +176,7 @@ async function main() {
     },
     {
       sentiment: "Negative",
-      source: "Trust Pilot",
+      source: "Live Chat",
       description: "Payment & Withdrawal Processing: Delays and transaction disputes",
       critical: true,
       team: "Finance",
@@ -186,7 +186,7 @@ async function main() {
     },
     {
       sentiment: "Neutral",
-      source: "Trust Pilot",
+      source: "Live Chat",
       description: "Feature Requests: Trading tools and platform improvements",
       critical: false,
       team: "Product",
@@ -199,7 +199,7 @@ async function main() {
       source: "Trust Pilot",
       description: "Educational Content Feedback: Tutorial and learning resources",
       critical: false,
-      team: "Education",
+      team: "Product",
       priority: "Low",
       notified: false,
       notifiedAt: null,
