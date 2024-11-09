@@ -30,38 +30,31 @@ export const columns: ColumnDef<Issue>[] = [
   {
     id: "sentiment",
     accessorKey: "sentiment",
-    header: "Task",
+    header: "Tags",
     cell: ({ row }) => {
       const issue = row.original;
       return (
         <div className="flex items-center gap-2">
-          <Badge variant={getSentimentVariant(issue.sentiment)}>
-            {issue.sentiment}
+          <Badge
+            variant={getSentimentVariant(issue.sentiment)}
+          >
+            {issue.sentiment}&nbsp;
+            {getSentimentEmoji(issue.sentiment)}
           </Badge>
-          <Badge variant="outline">
-            {issue.source}
-          </Badge>
-          {issue.critical && (
-            <Badge variant="destructive">
-              Critical
-            </Badge>
-          )}
+          <Badge variant="outline">{issue.source}</Badge>
+          {issue.critical && <Badge variant="destructive">‼️ Critical</Badge>}
         </div>
       );
     },
   },
   {
     accessorKey: "description",
-    header: "Title",
+    header: "Issue",
   },
   {
     accessorKey: "team",
-    header: "Team",
-    cell: ({ row }) => (
-      <Badge variant="default">
-        {row.getValue("team")}
-      </Badge>
-    ),
+    header: "Response Team",
+    cell: ({ row }) => <Badge variant="default">{row.getValue("team")}</Badge>,
   },
   {
     accessorKey: "priority",
@@ -87,6 +80,19 @@ const getSentimentVariant = (sentiment: string) => {
       return "neutral";
     case "Negative":
       return "destructive";
+    default:
+      return "default";
+  }
+};
+
+const getSentimentEmoji = (sentiment: string) => {
+  switch (sentiment) {
+    case "Positive":
+      return "😄";
+    case "Neutral":
+      return "😐";
+    case "Negative":
+      return "😢";
     default:
       return "default";
   }
