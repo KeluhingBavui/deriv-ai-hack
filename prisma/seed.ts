@@ -213,41 +213,84 @@ async function main() {
 
   // Helper function to determine which issue a feedback belongs to
   const determineIssueId = (feedback: { content: string; sentiment: string }) => {
+    const content = feedback.content.toLowerCase();
+    
     // For negative feedback
     if (feedback.sentiment === "Negative") {
-      if (feedback.content.toLowerCase().includes('crash') || 
-          feedback.content.toLowerCase().includes('delay') || 
-          feedback.content.toLowerCase().includes('technical issue')) {
-        return createdIssues[0].id;  // Platform Technical Issues
+      // Platform Technical Issues - be more specific about technical problems
+      if (content.includes('crash') || 
+          content.includes('bug') ||
+          content.includes('error') ||
+          (content.includes('technical') && content.includes('issue')) ||
+          (content.includes('platform') && (
+            content.includes('slow') || 
+            content.includes('down') || 
+            content.includes('broken')
+          ))) {
+        return createdIssues[0].id;
       }
-      if (feedback.content.toLowerCase().includes('blocked') || 
-          feedback.content.toLowerCase().includes('restricted') || 
-          feedback.content.toLowerCase().includes('locked')) {
-        return createdIssues[1].id;  // Account Access & Restrictions
+      
+      // Account Access & Restrictions
+      if (content.includes('blocked') || 
+          content.includes('restricted') || 
+          content.includes('locked') ||
+          content.includes('access denied') ||
+          content.includes('cant log in')) {
+        return createdIssues[1].id;
       }
-      if (feedback.content.toLowerCase().includes('support') || 
-          feedback.content.toLowerCase().includes('service') || 
-          feedback.content.toLowerCase().includes('response')) {
-        return createdIssues[2].id;  // Customer Service Response
+      
+      // Customer Service Response
+      if (content.includes('support') || 
+          content.includes('customer service') || 
+          content.includes('response time') ||
+          content.includes('no reply') ||
+          content.includes('waiting for help')) {
+        return createdIssues[2].id;
       }
-      if (feedback.content.toLowerCase().includes('withdrawal') || 
-          feedback.content.toLowerCase().includes('deposit') || 
-          feedback.content.toLowerCase().includes('payment')) {
-        return createdIssues[3].id;  // Payment & Withdrawal Processing
+      
+      // Payment & Withdrawal Processing
+      if (content.includes('withdrawal') || 
+          content.includes('deposit') || 
+          content.includes('payment') ||
+          content.includes('transaction') ||
+          content.includes('money')) {
+        return createdIssues[3].id;
       }
     }
 
     // For positive feedback
     if (feedback.sentiment === "Positive") {
-      if (feedback.content.toLowerCase().includes('tutorial') || 
-          feedback.content.toLowerCase().includes('learn') || 
-          feedback.content.toLowerCase().includes('education')) {
-        return createdIssues[5].id;  // Educational Content Feedback
+      // Educational Content Feedback - be more specific
+      if (content.includes('tutorial') || 
+          content.includes('learning') || 
+          content.includes('education') ||
+          content.includes('course') ||
+          content.includes('training')) {
+        return createdIssues[5].id;
       }
     }
 
-    // Default to feature requests for any remaining feedbacks
-    return createdIssues[4].id;  // Feature Requests (Neutral sentiment)
+    // Default to feature requests for:
+    // 1. Neutral sentiment
+    // 2. Unmatched positive feedback
+    // 3. General improvement suggestions
+    if (content.includes('feature') ||
+        content.includes('suggest') ||
+        content.includes('improve') ||
+        content.includes('would be nice') ||
+        content.includes('add')) {
+      return createdIssues[4].id;
+    }
+
+    // If no specific category matches, assign based on sentiment
+    if (feedback.sentiment === "Negative") {
+      return createdIssues[2].id; // Default negative to Customer Service
+    }
+    if (feedback.sentiment === "Positive") {
+      return createdIssues[5].id; // Default positive to Educational Content
+    }
+    
+    return createdIssues[4].id; // Default neutral to Feature Requests
   };
 
   // Create all feedbacks with appropriate issue links
