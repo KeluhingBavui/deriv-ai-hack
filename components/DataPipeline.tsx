@@ -147,9 +147,9 @@ export function DataPipeline({ onImportComplete }: DataPipelineProps) {
             <Card
               className={`
               transition-all duration-300 h-full
-              ${  
+              ${
                 step.status === "processing"
-                  ? "border-blue-500 bg-blue-500/10"
+                  ? "border-blue-500 animate-gradient bg-gradient-to-r from-blue-500/10 via-blue-500/20 to-blue-500/10 bg-[length:200%_100%]"
                   : step.status === "completed"
                   ? "border-green-500 bg-green-500/10"
                   : ""

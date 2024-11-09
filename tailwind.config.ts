@@ -63,7 +63,16 @@ const config: Config = {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
+  		},
+  		keyframes: {
+  			gradient: {
+  				'0%': { backgroundPosition: '0% 50%' },
+  				'100%': { backgroundPosition: '-200% 50%' },
+  			},
+  		},
+  		animation: {
+  			gradient: 'gradient 8s linear infinite',
+  		},
   	}
   },
   plugins: [require("tailwindcss-animate")],
