@@ -58,20 +58,6 @@ async function main() {
     data: users
   });
 
-  // Create issue first
-  const issue = await prisma.issue.create({
-    data: {
-      sentiment: "Neutral",
-      source: "Trust Pilot",
-      description: "Product works as expected but could use more features",
-      critical: false,
-      team: "Engineering",
-      priority: "Low",
-      notified: false,
-      notifiedAt: null,
-    }
-  });
-
   // Create all feedbacks and link them to the issue
   const feedbacks = [
     {
@@ -113,22 +99,168 @@ async function main() {
     {
       content: "Execution of trades Easy to use the platform portal Deposited is easy NB Please share trading strategy for your loyalty customer",
       sentiment: "Positive",
+    },
+    {
+      content: "I've been using Deriv for over 5 years now and I must say their platform stability is outstanding. The charts are responsive, execution is quick, and their customer service team actually knows what they're talking about. Recently they added new features to the mobile app which made trading on the go much easier. Highly recommended for serious traders!",
+      sentiment: "Positive",
+    },
+    {
+      content: "STAY AWAY from this platform! Lost $2000 due to 'technical issues' during a crucial trade. When I contacted support, they kept passing me around different departments with no resolution. It's been 3 weeks and still no proper explanation. They only care about taking your money. SCAMMERS!",
+      sentiment: "Negative",
+    },
+    {
+      content: "The withdrawal process has improved significantly over the past few months. Used to take 2-3 days, now I get my money within hours. The new verification system is also much smoother. Just wish they would add more payment methods for my region. Overall satisfied with the service.",
+      sentiment: "Positive",
+    },
+    {
+      content: "My account got restricted without any warning. They claim I violated their terms but won't specify which ones. I've been trading legitimately for 2 years, never had any issues. Now they're holding my funds hostage. Multiple emails sent, no proper response. This is completely unprofessional!",
+      sentiment: "Negative",
+    },
+    {
+      content: "What I appreciate most about Deriv is their educational resources. The tutorial videos and webinars really helped me understand the basics of trading. The demo account is great for practice. Would be nice if they could add more advanced strategy tutorials though. Keep up the good work!",
+      sentiment: "Positive",
+    },
+    {
+      content: "Platform keeps crashing during peak trading hours. Lost money multiple times because I couldn't close my positions. Customer service just gives generic responses about 'investigating the issue.' Save yourself the headache and trade elsewhere. These people don't care about their customers at all.",
+      sentiment: "Negative",
+    },
+    {
+      content: "Been using Deriv for forex trading since 2019. Their spreads are competitive and the platform is user-friendly. Recently they've added more currency pairs which is great. The only improvement needed is faster chart loading times during market opening hours. But overall, very satisfied with my experience.",
+      sentiment: "Positive",
+    },
+    {
+      content: "Absolutely terrible experience. Tried to deposit $500 but they charged my card twice. Support team is useless - kept saying they'll 'escalate' the issue but nothing happened. Had to dispute with my bank to get the money back. Don't trust them with your money!",
+      sentiment: "Negative",
+    },
+    {
+      content: "Great improvements to the platform lately! The new risk management tools are really helpful, especially the trailing stop loss feature. Also love the new market analysis section. One suggestion: please add more indicators for technical analysis. Otherwise, fantastic service!",
+      sentiment: "Positive",
+    },
+    {
+      content: "I'm a beginner trader and Deriv has been perfect for learning. The interface isn't overwhelming, customer support is patient with questions, and the minimum deposit requirement is reasonable. Would love to see more educational content for different trading strategies. Thank you for making trading accessible!",
+      sentiment: "Positive",
     }
   ];
 
-  // Create all feedbacks
+  // Create issues for different categories
+  const issues = [
+    {
+      sentiment: "Negative",
+      source: "Trust Pilot",
+      description: "Platform Technical Issues: Crashes, delays, and unexpected behavior during trading",
+      critical: true,
+      team: "Engineering",
+      priority: "High",
+      notified: true,
+      notifiedAt: new Date(),
+    },
+    {
+      sentiment: "Negative",
+      source: "Trust Pilot",
+      description: "Account Access & Restrictions: Unexpected blocks and payment verification issues",
+      critical: true,
+      team: "Risk and Compliance",
+      priority: "High",
+      notified: true,
+      notifiedAt: new Date(),
+    },
+    {
+      sentiment: "Negative",
+      source: "Trust Pilot",
+      description: "Customer Service Response: Slow resolution times and communication issues",
+      critical: false,
+      team: "Customer Support",
+      priority: "Medium",
+      notified: true,
+      notifiedAt: new Date(),
+    },
+    {
+      sentiment: "Negative",
+      source: "Trust Pilot",
+      description: "Payment & Withdrawal Processing: Delays and transaction disputes",
+      critical: true,
+      team: "Finance",
+      priority: "High",
+      notified: true,
+      notifiedAt: new Date(),
+    },
+    {
+      sentiment: "Neutral",
+      source: "Trust Pilot",
+      description: "Feature Requests: Trading tools and platform improvements",
+      critical: false,
+      team: "Product",
+      priority: "Medium",
+      notified: false,
+      notifiedAt: null,
+    },
+    {
+      sentiment: "Positive",
+      source: "Trust Pilot",
+      description: "Educational Content Feedback: Tutorial and learning resources",
+      critical: false,
+      team: "Education",
+      priority: "Low",
+      notified: false,
+      notifiedAt: null,
+    }
+  ];
+
+  // Create all issues
+  const createdIssues = await Promise.all(
+    issues.map(issue => prisma.issue.create({ data: issue }))
+  );
+
+  // Helper function to determine which issue a feedback belongs to
+  const determineIssueId = (feedback: { content: string; sentiment: string }) => {
+    // For negative feedback
+    if (feedback.sentiment === "Negative") {
+      if (feedback.content.toLowerCase().includes('crash') || 
+          feedback.content.toLowerCase().includes('delay') || 
+          feedback.content.toLowerCase().includes('technical issue')) {
+        return createdIssues[0].id;  // Platform Technical Issues
+      }
+      if (feedback.content.toLowerCase().includes('blocked') || 
+          feedback.content.toLowerCase().includes('restricted') || 
+          feedback.content.toLowerCase().includes('locked')) {
+        return createdIssues[1].id;  // Account Access & Restrictions
+      }
+      if (feedback.content.toLowerCase().includes('support') || 
+          feedback.content.toLowerCase().includes('service') || 
+          feedback.content.toLowerCase().includes('response')) {
+        return createdIssues[2].id;  // Customer Service Response
+      }
+      if (feedback.content.toLowerCase().includes('withdrawal') || 
+          feedback.content.toLowerCase().includes('deposit') || 
+          feedback.content.toLowerCase().includes('payment')) {
+        return createdIssues[3].id;  // Payment & Withdrawal Processing
+      }
+    }
+
+    // For positive feedback
+    if (feedback.sentiment === "Positive") {
+      if (feedback.content.toLowerCase().includes('tutorial') || 
+          feedback.content.toLowerCase().includes('learn') || 
+          feedback.content.toLowerCase().includes('education')) {
+        return createdIssues[5].id;  // Educational Content Feedback
+      }
+    }
+
+    // Default to feature requests for any remaining feedbacks
+    return createdIssues[4].id;  // Feature Requests (Neutral sentiment)
+  };
+
+  // Create all feedbacks with appropriate issue links
   await Promise.all(
     feedbacks.map(feedback => 
       prisma.feedback.create({
         data: {
           ...feedback,
-          issueId: issue.id
+          issueId: determineIssueId(feedback)
         }
       })
     )
   );
-
-  console.log("Seeding completed with 100 users, 10 feedback entries, and 1 issue.");
 }
 
 main()
