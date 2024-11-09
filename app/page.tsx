@@ -14,7 +14,7 @@ export default function Home() {
 
         <DashboardMetrics />
         <IssuesTable />
-        <ChatBubble />
+        {/* <ChatBubble /> */}
       </div>
     </main>
   );

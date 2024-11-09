@@ -1,15 +1,13 @@
 "use client";
 
+import { Input } from "@/components/ui/input";
 import {
-  ColumnDef,
-  SortingState,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { useMemo, useState } from "react";
-
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -20,9 +18,26 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { Feedback, Issue } from "@/types";
+import {
+  ColumnDef,
+  SortingState,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
+import { useMemo, useState } from "react";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { ExportButton } from "./ExportButton";
 import { FeedbackDetails } from "./FeedbackDetails";
+import { Button } from "./ui/button";
 
 interface DataTableProps<TData extends Issue, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -142,11 +157,27 @@ export function DataTable<TData extends Issue, TValue>({
     },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    initialState: {
+      pagination: {
+        pageSize: 10,
+      },
+    },
   });
 
   const selectedRows = table
     .getFilteredSelectedRowModel()
     .rows.map((row) => row.original);
+
+  // Get the total number of rows from filtered data
+  const totalRows = filteredData.length;
+  const PAGE_SIZES = [10, 20, 30, 40, 50];
+
+  // Calculate the width needed for the input based on the number of digits
+  const getInputWidth = (totalPages: number) => {
+    const digits = totalPages.toString().length;
+    return `${Math.max(digits * 10 + 10, 40)}px`; // minimum width of 40px
+  };
 
   return (
     <div className="space-y-4">
@@ -229,6 +260,99 @@ export function DataTable<TData extends Issue, TValue>({
             )}
           </TableBody>
         </Table>
+      </div>
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="flex items-center space-x-2">
+          <p className="text-sm font-medium">Rows per page</p>
+          <Select
+            value={`${table.getState().pagination.pageSize}`}
+            onValueChange={(value) => {
+              table.setPageSize(Number(value));
+            }}
+          >
+            <SelectTrigger className="h-8 w-[70px]">
+              <SelectValue placeholder={table.getState().pagination.pageSize} />
+            </SelectTrigger>
+            <SelectContent side="top" className="w-[70px] min-w-[70px]">
+              {PAGE_SIZES.map((pageSize) => (
+                <SelectItem
+                  key={pageSize}
+                  value={`${pageSize}`}
+                  disabled={pageSize > totalRows && pageSize !== 10}
+                  className={
+                    pageSize > totalRows && pageSize !== 10
+                      ? "text-muted-foreground"
+                      : ""
+                  }
+                >
+                  {pageSize}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="flex items-center gap-x-2">
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.setPageIndex(0)}
+              disabled={!table.getCanPreviousPage()}
+            >
+              <ChevronsLeft className="h-4 w-4" />
+              First
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <div className="flex items-center gap-x-1">
+              <Input
+                type="number"
+                min={1}
+                max={table.getPageCount()}
+                value={table.getState().pagination.pageIndex + 1}
+                onChange={(e) => {
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                  if (page >= 0 && page < table.getPageCount()) {
+                    table.setPageIndex(page);
+                  }
+                }}
+                className="h-8 bg-background text-center"
+                style={{
+                  width: getInputWidth(table.getPageCount()),
+                  paddingRight: "4px", // Adjust padding for number input arrows
+                  paddingLeft: "4px",
+                }}
+              />
+              <span className="text-sm text-muted-foreground whitespace-nowrap">
+                of {table.getPageCount()}
+              </span>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+              disabled={!table.getCanNextPage()}
+            >
+              Last
+              <ChevronsRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
