@@ -11,19 +11,19 @@ export default function DashboardMetrics() {
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
       <GaugeChart
         title="Net Promoter Score (NPS)"
-        value={Number(metrics.nps.toFixed(2))}
+        value={metrics.nps ? Number(metrics.nps.toFixed(2)) : 0}
         max={100}
         colors={["#4CAF50", "#FFA000", "#F44336"]}
       />
       <GaugeChart
         title="Customer Satisfaction Score (CSAT)"
-        value={Number(metrics.csat.toFixed(2))}
+        value={metrics.csat ? Number(metrics.csat.toFixed(2)) : 0}
         max={100}
         colors={["#4CAF50", "#FFA000", "#F44336"]}
       />
       <GaugeChart
         title="Customer Effort Score (CES)"
-        value={Number(metrics.ces.toFixed(2))}
+        value={metrics.ces ? Number(metrics.ces.toFixed(2)) : 0}
         max={5}
         unit=""
         colors={["#4CAF50", "#FFA000", "#F44336"]}
