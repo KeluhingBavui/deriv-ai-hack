@@ -10,10 +10,9 @@ import { DataTable } from "./data-table";
 import { Button } from "./ui/button";
 
 export default function IssuesTable() {
-  const { issues, loading, filteredIssues } = useIssues();
+  const { issues, loading, filteredIssues, fetchIssues } = useIssues();
   const [isImported, setIsImported] = useState(false);
 
-  // Load imported state from localStorage on mount
   useEffect(() => {
     const storedImportState = localStorage.getItem("isDataImported");
     if (storedImportState === "true") {
@@ -21,9 +20,11 @@ export default function IssuesTable() {
     }
   }, []);
 
-  const handleImportComplete = () => {
+  const handleImportComplete = async () => {
     setIsImported(true);
     localStorage.setItem("isDataImported", "true");
+    // Fetch issues after import is complete
+    await fetchIssues();
   };
 
   const handleClearData = () => {
