@@ -15,6 +15,7 @@ import {
   BellRing,
   ChevronsUpDown,
   OctagonAlert,
+  Sparkles,
 } from "lucide-react";
 import { NotifyAlert } from "./NotifyAlert";
 import { Button } from "./ui/button";
@@ -45,7 +46,12 @@ export const columns: ColumnDef<Issue>[] = [
   {
     id: "sentiment",
     accessorKey: "sentiment",
-    header: "Tags",
+    header: () => (
+      <div className="flex items-center gap-2">
+        <Sparkles className="w-4 h-4 text-purple-600" />
+        Tags
+      </div>
+    ),
     cell: ({ row }) => {
       const issue = row.original;
       return (
@@ -66,7 +72,12 @@ export const columns: ColumnDef<Issue>[] = [
   },
   {
     accessorKey: "source",
-    header: "Source",
+    header: () => (
+      <div className="flex items-center gap-2">
+        <Sparkles className="w-4 h-4 text-purple-600" />
+        Source
+      </div>
+    ),
     cell: ({ row }) => {
       const issue = row.original;
       return <Badge variant="outline">{issue.source}</Badge>;
@@ -74,7 +85,12 @@ export const columns: ColumnDef<Issue>[] = [
   },
   {
     accessorKey: "description",
-    header: "Issue",
+    header: () => (
+      <div className="flex items-center gap-2">
+        <Sparkles className="w-4 h-4 text-purple-600" />
+        Issue
+      </div>
+    ),
   },
   {
     accessorKey: "team",
