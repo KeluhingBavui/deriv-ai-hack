@@ -10,7 +10,7 @@ export default function Home() {
       <div className="max-w-[1400px] mx-auto space-y-8">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold">Customer Satisfaction Dashboard</h1>
-          <Button variant="outline">
+          <Button variant="default">
             <Download className="w-4 h-4 mr-2" />
             Export CSV
           </Button>
