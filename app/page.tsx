@@ -3,10 +3,10 @@
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { Boxes } from "@/components/ui/background-boxes";
 import { Button } from "@/components/ui/button";
+import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { FeatureGrid } from "@/components/ui/feature-grid";
 import { ScrollButton } from "@/components/ui/scroll-button";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
-import { WobbleCard } from "@/components/ui/wobble-card";
 import {
   AlertTriangle,
   ArrowRight,
@@ -177,20 +177,32 @@ export default function LandingPage() {
           id="preview"
           className="min-h-screen relative flex flex-col items-center justify-center py-20"
         >
-          <div className="max-w-5xl mx-auto px-4">
-            <WobbleCard>
+          <div className="flex flex-col overflow-hidden">
+            <ContainerScroll
+              titleComponent={
+                <>
+                  <h1 className="text-4xl font-semibold text-black dark:text-white">
+                    Experience the future of <br />
+                    <span className="text-4xl md:text-[6rem] font-bold mt-1 leading-none">
+                      Customer Analytics
+                    </span>
+                  </h1>
+                </>
+              }
+            >
               <Image
-                src="/dashboard-preview.png"
-                alt="dashboard"
-                width={1400}
+                src={`/dashboard-preview.png`}
+                alt="hero"
                 height={720}
-                className="rounded-lg border shadow-lg"
+                width={1400}
+                className="mx-auto rounded-2xl object-cover h-full object-left-top"
+                draggable={false}
               />
-            </WobbleCard>
+            </ContainerScroll>
           </div>
           <Link href="/dashboard">
             <Button size="lg" className="bg-blue-500 hover:bg-blue-600 mt-8">
-              Try Dashboard Now
+              Launch Dashboard
               <ArrowRight className="ml-2" />
             </Button>
           </Link>
