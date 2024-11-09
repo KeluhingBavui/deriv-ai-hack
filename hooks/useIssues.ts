@@ -9,10 +9,14 @@ export function useIssues() {
   const [loading, setLoading] = useState(true);
 
   const fetchIssues = useCallback(async () => {
+    if (localStorage.getItem("isDataImported") !== "true") {
+      setIssues([]);
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await fetch("/api/issues");
       const data = await response.json();
       setIssues(data);

@@ -103,6 +103,18 @@ export function DataPipeline({ onImportComplete }: DataPipelineProps) {
     };
   }, [currentStepIndex, isImporting, steps, onImportComplete]);
 
+  // Reset steps when component mounts (in case data was cleared)
+  useEffect(() => {
+    setSteps((prev) =>
+      prev.map((s) => ({
+        ...s,
+        status: "waiting",
+      }))
+    );
+    setCurrentStepIndex(0);
+    setIsImporting(false);
+  }, []);
+
   return (
     <div className="space-y-8 p-6 bg-white/5 rounded-lg border border-white/10">
       <div className="flex justify-between items-center">
