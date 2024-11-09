@@ -20,6 +20,7 @@ import { Feedback, Issue } from "@/types";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { ExportButton } from "./ExportButton";
 import { FeedbackDetails } from "./FeedbackDetails";
+import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData extends Issue, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -137,15 +138,23 @@ export function DataTable<TData extends Issue, TValue>({
                       </TableCell>
                     ))}
                   </TableRow>
-                  {expandedRows[row.original.id] && (
-                    <TableRow>
-                      <TableCell colSpan={columns.length} className="p-0">
+                  <TableRow>
+                    <TableCell 
+                      colSpan={columns.length} 
+                      className="p-0"
+                    >
+                      <div
+                        className={cn(
+                          "transition-all duration-500 ease-in-out",
+                          expandedRows[row.original.id] ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0 overflow-hidden"
+                        )}
+                      >
                         <FeedbackDetails
                           feedbackList={feedbackData[row.original.id] || []}
                         />
-                      </TableCell>
-                    </TableRow>
-                  )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
                 </>
               ))
             ) : (
