@@ -1,7 +1,7 @@
 "use client";
 
 import { FilterOptions, Issue } from "@/types";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export function useIssues() {
   const [issues, setIssues] = useState<Issue[]>([]);
@@ -19,6 +19,10 @@ export function useIssues() {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    fetchIssues();
+  }, [fetchIssues]);
 
   const createIssue = async (data: Omit<Issue, "id">) => {
     try {
