@@ -9,23 +9,22 @@ import {
 interface DataTableToolbarProps {
   selectedSentiment: string;
   onSentimentChange: (value: string) => void;
+  exportButton: React.ReactNode;
 }
 
-export function DataTableToolbar({ 
+export function DataTableToolbar({
   selectedSentiment,
-  onSentimentChange 
+  onSentimentChange,
+  exportButton,
 }: DataTableToolbarProps) {
   return (
     <div className="flex items-center justify-between py-4">
       <div className="flex flex-1 items-center space-x-2">
-        <Select 
-          value={selectedSentiment} 
-          onValueChange={onSentimentChange}
-        >
+        <Select value={selectedSentiment} onValueChange={onSentimentChange}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Filter by sentiment">
-              {selectedSentiment === "all" 
-                ? "All Sentiments" 
+              {selectedSentiment === "all"
+                ? "All Sentiments"
                 : selectedSentiment}
             </SelectValue>
           </SelectTrigger>
@@ -37,6 +36,7 @@ export function DataTableToolbar({
           </SelectContent>
         </Select>
       </div>
+      {exportButton}
     </div>
   );
-} 
+}

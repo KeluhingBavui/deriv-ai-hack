@@ -86,12 +86,10 @@ export function DataTable<TData extends Issue, TValue>({
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
-        <ExportButton data={data} selectedRows={selectedRows} />
-      </div>
       <DataTableToolbar
         selectedSentiment={selectedSentiment}
         onSentimentChange={setSelectedSentiment}
+        exportButton={<ExportButton data={data} selectedRows={selectedRows} />}
       />
       <div className="rounded-lg border border-border">
         <Table>
