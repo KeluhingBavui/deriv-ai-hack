@@ -18,4 +18,13 @@ export interface FilterOptions {
     start: Date;
     end: Date;
   };
+}
+
+export interface Feedback {
+  id: string;
+  content: string;
+  sentiment: string;
+  createdAt: Date;
+  userId: string;
+  issueId: string | null;
 } 

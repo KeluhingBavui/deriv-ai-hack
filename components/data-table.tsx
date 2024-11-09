@@ -16,9 +16,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Issue } from "@/types";
+import { Feedback, Issue } from "@/types";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { ExportButton } from "./ExportButton";
+import { FeedbackDetails } from "./FeedbackDetails";
 
 interface DataTableProps<TData extends Issue, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -31,12 +32,42 @@ export function DataTable<TData extends Issue, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [selectedSentiment, setSelectedSentiment] = useState<string>("all");
+  const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
+  const [feedbackData, setFeedbackData] = useState<Record<string, Feedback[]>>(
+    {}
+  );
 
   // Filter the data based on selected sentiment
   const filteredData = useMemo(() => {
     if (selectedSentiment === "all") return data;
     return data.filter((item) => item.sentiment === selectedSentiment);
   }, [data, selectedSentiment]);
+
+  const fetchFeedback = async (issueId: string) => {
+    try {
+      const response = await fetch(`/api/issues/${issueId}/feedback`);
+      const data = await response.json();
+      setFeedbackData((prev) => ({
+        ...prev,
+        [issueId]: data,
+      }));
+    } catch (error) {
+      console.error("Error fetching feedback:", error);
+    }
+  };
+
+  const toggleRow = async (issueId: string) => {
+    setExpandedRows((prev) => {
+      const isExpanded = !prev[issueId];
+      if (isExpanded && !feedbackData[issueId]) {
+        fetchFeedback(issueId);
+      }
+      return {
+        ...prev,
+        [issueId]: isExpanded,
+      };
+    });
+  };
 
   const table = useReactTable({
     data: filteredData,
@@ -83,20 +114,32 @@ export function DataTable<TData extends Issue, TValue>({
           <TableBody>
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className="hover:bg-white/5"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
+                <>
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    className="hover:bg-white/5 cursor-pointer"
+                    onClick={() => toggleRow(row.original.id)}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                  {expandedRows[row.original.id] && (
+                    <TableRow>
+                      <TableCell colSpan={columns.length} className="p-0">
+                        <FeedbackDetails
+                          feedbackList={feedbackData[row.original.id] || []}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </>
               ))
             ) : (
               <TableRow>
