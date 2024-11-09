@@ -8,9 +8,7 @@ export async function GET() {
     // Calculate averages
     const nps =
       users.reduce((acc, user) => acc + user.npsScore, 0) / users.length;
-    const csat =
-      (users.reduce((acc, user) => acc + user.csatScore, 0) / users.length) *
-      20; // Convert 1-5 to percentage
+    const csat = users.reduce((acc, user) => acc + user.csatScore, 0);
     const ces =
       users.reduce((acc, user) => acc + user.cesScore, 0) / users.length;
 
