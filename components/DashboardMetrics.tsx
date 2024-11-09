@@ -29,9 +29,9 @@ export default function DashboardMetrics() {
         colors={["#4CAF50", "#FFA000", "#F44336"]}
       />
       <SentimentIndicator
-        positive={Number(metrics.sentiment.positive.toFixed(2))}
-        neutral={Number(metrics.sentiment.neutral.toFixed(2))}
-        negative={Number(metrics.sentiment.negative.toFixed(2))}
+        positive={metrics.sentiment.positive}
+        neutral={metrics.sentiment.neutral}
+        negative={metrics.sentiment.negative}
       />
     </div>
   );
