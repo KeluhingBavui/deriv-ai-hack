@@ -12,11 +12,11 @@ import { ColumnDef } from "@tanstack/react-table";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
-  Bell,
   BellRing,
   ChevronsUpDown,
   OctagonAlert,
 } from "lucide-react";
+import { NotifyAlert } from "./NotifyAlert";
 import { Button } from "./ui/button";
 
 export const columns: ColumnDef<Issue>[] = [
@@ -138,6 +138,7 @@ export const columns: ColumnDef<Issue>[] = [
     cell: ({ row }) => {
       const notified = row.getValue("notified") as boolean;
       const notifiedAt = row.original.notifiedAt as Date | undefined;
+      const issue = row.original;
 
       return (
         <TooltipProvider>
@@ -150,10 +151,11 @@ export const columns: ColumnDef<Issue>[] = [
                     <span className="text-xs">Notified</span>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Bell className="w-4 h-4" />
-                    <span className="text-xs">Notify</span>
-                  </div>
+                  <NotifyAlert
+                    issueId={issue.id}
+                    description={issue.description}
+                    onNotifySuccess={() => window.location.reload()}
+                  />
                 )}
               </div>
             </TooltipTrigger>

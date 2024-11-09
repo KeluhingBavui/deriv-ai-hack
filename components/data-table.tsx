@@ -98,11 +98,12 @@ export function DataTable<TData extends Issue, TValue>({
   };
 
   const toggleRow = async (issueId: string, event: React.MouseEvent) => {
-    // Check if the click target is a checkbox or its parent label
     const target = event.target as HTMLElement;
+    // Check if click is from notify button or its children
     if (
       target.closest('[role="checkbox"]') ||
-      target.getAttribute("aria-label")?.includes("Select")
+      target.getAttribute("aria-label")?.includes("Select") ||
+      target.closest("[data-notify-button]")
     ) {
       return;
     }

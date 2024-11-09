@@ -6,13 +6,8 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { Feedback, Issue } from "@/types";
-import {
-  AlertTriangle,
-  Bell,
-  BellRing,
-  CheckCircle2,
-  Timer,
-} from "lucide-react";
+import { AlertTriangle, BellRing, CheckCircle2, Timer } from "lucide-react";
+import { NotifyAlert } from "./NotifyAlert";
 import { Badge } from "./ui/badge";
 
 interface FeedbackDrawerProps {
@@ -83,10 +78,11 @@ export function FeedbackDrawer({
                     <span className="text-sm">Team Notified</span>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Bell className="w-4 h-4" />
-                    <span className="text-sm">Notify</span>
-                  </div>
+                  <NotifyAlert
+                    issueId={issue.id}
+                    description={issue.description}
+                    onNotifySuccess={() => window.location.reload()}
+                  />
                 )}
               </div>
             </div>
