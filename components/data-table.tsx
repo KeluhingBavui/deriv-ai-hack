@@ -235,7 +235,7 @@ export function DataTable<TData extends Issue, TValue>({
                         className={cn(
                           "transition-all duration-500 ease-in-out",
                           expandedRows[row.original.id]
-                            ? "max-h-[500px] opacity-100"
+                            ? "h-fit opacity-100"
                             : "max-h-0 opacity-0 overflow-hidden"
                         )}
                       >
