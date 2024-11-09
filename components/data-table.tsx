@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { useState, useMemo } from "react"
+} from "@tanstack/react-table";
+import { useMemo, useState } from "react";
 
 import {
   Table,
@@ -15,40 +15,52 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { DataTableToolbar } from "./data-table-toolbar"
-import { Issue } from "@/types"
+} from "@/components/ui/table";
+import { Issue } from "@/types";
+import { DataTableToolbar } from "./data-table-toolbar";
+import { ExportButton } from "./ExportButton";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+interface DataTableProps<TData extends Issue, TValue> {
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends Issue, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const [selectedSentiment, setSelectedSentiment] = useState<string>("all")
+  const [rowSelection, setRowSelection] = useState({});
+  const [selectedSentiment, setSelectedSentiment] = useState<string>("all");
 
   // Filter the data based on selected sentiment
   const filteredData = useMemo(() => {
     if (selectedSentiment === "all") return data;
-    return (data as Issue[]).filter(
-      (item) => item.sentiment === selectedSentiment
-    );
+    return data.filter((item) => item.sentiment === selectedSentiment);
   }, [data, selectedSentiment]);
 
   const table = useReactTable({
     data: filteredData,
     columns,
+    state: {
+      rowSelection,
+    },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const selectedRows = table
+    .getFilteredSelectedRowModel()
+    .rows.map((row) => row.original);
+
   return (
-    <div>
-      <DataTableToolbar 
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <ExportButton data={data} selectedRows={selectedRows} />
+      </div>
+      <DataTableToolbar
         selectedSentiment={selectedSentiment}
-        onSentimentChange={setSelectedSentiment} 
+        onSentimentChange={setSelectedSentiment}
       />
       <div className="rounded-lg border border-border">
         <Table>
@@ -100,5 +112,5 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
     </div>
-  )
+  );
 }
