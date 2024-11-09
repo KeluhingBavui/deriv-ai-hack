@@ -39,21 +39,21 @@ export default function LandingPage() {
 
   const features = [
     {
-      title: "Real-time Sentiment Analysis",
+      title: "Centralized Feedback Pipeline",
       description:
-        "Instantly analyze customer feedback from multiple sources using AI",
+        "Aggregate customer feedback from multiple sources into a centralized pipeline",
       icon: <Brain className="w-6 h-6" />,
     },
     {
-      title: "Critical Issue Detection",
+      title: "Sentiment Analysis & Smart Prioritization",
       description:
-        "Automatically identify and notify teams of critical customer issues",
+        "Automatically analyze customer feedback and prioritize issues based on sentiment and severity",
       icon: <BarChart2 className="w-6 h-6" />,
     },
     {
-      title: "Team Collaboration",
+      title: "Critical Issue Identification & Automated Escalation",
       description:
-        "Streamline communication between support, engineering, and finance teams",
+        "Automatically identify and escalate critical issues to the appropriate team",
       icon: <MessageSquare className="w-6 h-6" />,
     },
   ];
@@ -81,21 +81,19 @@ export default function LandingPage() {
 
   const businessValues = [
     {
-      title: "Increased Efficiency",
+      title: "Faster Response Times",
       description:
-        "Reduce feedback processing time by up to 80% with AI-powered automation",
+        "Reduce feedback processing time by 50% with AI-powered automation",
       icon: <Clock className="w-6 h-6" />,
     },
     {
-      title: "Better Customer Retention",
-      description:
-        "Improve response times and customer satisfaction by catching issues early",
+      title: "Increase Productivity",
+      description: "Free up resources for more strategic initiatives",
       icon: <BarChart2 className="w-6 h-6" />,
     },
     {
-      title: "Cost Reduction",
-      description:
-        "Lower operational costs through automated analysis and streamlined workflows",
+      title: "Customer Satisfaction",
+      description: "Improve customer satisfaction by addressing issues faster",
       icon: <Split className="w-6 h-6" />,
     },
   ];
@@ -122,13 +120,13 @@ export default function LandingPage() {
             </Button>
           </Link>
         </div>
-        <ScrollButton targetId="problems" />
+        <ScrollButton targetId="solutions" />
       </section>
 
       {/* Main content sections - each full height */}
       <div className="space-y-0">
         {/* Problems section */}
-        <section
+        {/* <section
           id="problems"
           className="min-h-screen relative flex items-center justify-center py-20 bg-gray-50"
         >
@@ -140,7 +138,7 @@ export default function LandingPage() {
             />
           </div>
           <ScrollButton targetId="solutions" />
-        </section>
+        </section> */}
 
         {/* Solutions section */}
         <section
@@ -149,7 +147,7 @@ export default function LandingPage() {
         >
           <div className="max-w-5xl mx-auto px-4">
             <FeatureGrid
-              title="Our Solutions"
+              title="Our Solution: Automated Triage System"
               items={features}
               accentColor="blue"
             />
