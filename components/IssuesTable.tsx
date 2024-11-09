@@ -1,6 +1,7 @@
 "use client";
 
 import { useIssues } from "@/hooks/useIssues";
+import { notifyCriticalIssues } from "@/lib/notifyIssue";
 import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CriticalIssueNotification } from "./CriticalIssueNotification";
@@ -24,7 +25,14 @@ export default function IssuesTable() {
     setIsImported(true);
     localStorage.setItem("isDataImported", "true");
     // Fetch issues after import is complete
-    await fetchIssues();
+    const issues = await fetchIssues();
+    if (issues) {
+      const { updatedIssues } = await notifyCriticalIssues(issues);
+      if (updatedIssues.length > 0) {
+        // Fetch issues again to get the updated state
+        await fetchIssues();
+      }
+    }
   };
 
   const handleClearData = () => {
