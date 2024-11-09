@@ -1,6 +1,6 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+// import { cn } from "@/lib/utils";
 import { Issue } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 
@@ -35,16 +35,21 @@ export const columns: ColumnDef<Issue>[] = [
       const issue = row.original;
       return (
         <div className="flex items-center gap-2">
-          <Badge
-            variant={getSentimentVariant(issue.sentiment)}
-          >
+          <Badge variant={getSentimentVariant(issue.sentiment)}>
             {issue.sentiment}&nbsp;
             {getSentimentEmoji(issue.sentiment)}
           </Badge>
-          <Badge variant="outline">{issue.source}</Badge>
           {issue.critical && <Badge variant="destructive">‼️ Critical</Badge>}
         </div>
       );
+    },
+  },
+  {
+    accessorKey: "source",
+    header: "Source",
+    cell: ({ row }) => {
+      const issue = row.original;
+      return <Badge variant="outline">{issue.source}</Badge>;
     },
   },
   {
