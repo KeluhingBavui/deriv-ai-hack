@@ -1,4 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Issue } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
@@ -34,21 +35,16 @@ export const columns: ColumnDef<Issue>[] = [
       const issue = row.original;
       return (
         <div className="flex items-center gap-2">
-          <span
-            className={cn(
-              "px-2 py-1 rounded-full text-xs",
-              getSentimentColor(issue.sentiment)
-            )}
-          >
+          <Badge variant={getSentimentVariant(issue.sentiment)}>
             {issue.sentiment}
-          </span>
-          <span className="px-2 py-1 rounded-full bg-white/10 text-xs">
+          </Badge>
+          <Badge variant="outline">
             {issue.source}
-          </span>
+          </Badge>
           {issue.critical && (
-            <span className="px-2 py-1 rounded-full bg-red-500/20 text-red-500 text-xs">
+            <Badge variant="destructive">
               Critical
-            </span>
+            </Badge>
           )}
         </div>
       );
@@ -62,9 +58,9 @@ export const columns: ColumnDef<Issue>[] = [
     accessorKey: "team",
     header: "Team",
     cell: ({ row }) => (
-      <span className="px-2 py-1 rounded-full bg-white/10 text-xs">
+      <Badge variant="default">
         {row.getValue("team")}
-      </span>
+      </Badge>
     ),
   },
   {
@@ -83,15 +79,15 @@ export const columns: ColumnDef<Issue>[] = [
   },
 ];
 
-const getSentimentColor = (sentiment: string) => {
+const getSentimentVariant = (sentiment: string) => {
   switch (sentiment) {
     case "Positive":
-      return "bg-green-500/20 text-green-500";
-    case "Negative":
-      return "bg-red-500/20 text-red-500";
+      return "success";
     case "Neutral":
-      return "bg-blue-500/20 text-blue-500";
+      return "neutral";
+    case "Negative":
+      return "destructive";
     default:
-      return "";
+      return "default";
   }
 };
