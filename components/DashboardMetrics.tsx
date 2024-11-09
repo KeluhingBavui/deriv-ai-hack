@@ -1,38 +1,38 @@
-"use client"
+"use client";
 
-import { GaugeChart } from "./GaugeChart";
 import { SentimentIndicator } from "../components/SentimentIndicator";
 import useMetrics from "../hooks/useMetrics";
+import { GaugeChart } from "./GaugeChart";
 
 export default function DashboardMetrics() {
   const { metrics } = useMetrics();
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <GaugeChart 
+      <GaugeChart
         title="Net Promoter Score (NPS)"
-        value={metrics.nps}
+        value={Number(metrics.nps.toFixed(2))}
         max={100}
-        colors={['#4CAF50', '#FFA000', '#F44336']}
+        colors={["#4CAF50", "#FFA000", "#F44336"]}
       />
-      <GaugeChart 
+      <GaugeChart
         title="Customer Satisfaction Score (CSAT)"
-        value={metrics.csat}
+        value={Number(metrics.csat.toFixed(2))}
         max={100}
-        colors={['#4CAF50', '#FFA000', '#F44336']}
+        colors={["#4CAF50", "#FFA000", "#F44336"]}
       />
-      <GaugeChart 
+      <GaugeChart
         title="Customer Effort Score (CES)"
-        value={metrics.ces}
+        value={Number(metrics.ces.toFixed(2))}
         max={5}
         unit=""
-        colors={['#4CAF50', '#FFA000', '#F44336']}
+        colors={["#4CAF50", "#FFA000", "#F44336"]}
       />
-      <SentimentIndicator 
-        positive={metrics.sentiment.positive}
-        neutral={metrics.sentiment.neutral}
-        negative={metrics.sentiment.negative}
+      <SentimentIndicator
+        positive={Number(metrics.sentiment.positive.toFixed(2))}
+        neutral={Number(metrics.sentiment.neutral.toFixed(2))}
+        negative={Number(metrics.sentiment.negative.toFixed(2))}
       />
     </div>
   );
-} 
+}
