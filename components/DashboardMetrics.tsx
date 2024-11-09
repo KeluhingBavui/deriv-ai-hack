@@ -1,3 +1,5 @@
+"use client"
+
 import { GaugeChart } from "./GaugeChart";
 import { SentimentIndicator } from "../components/SentimentIndicator";
 import useMetrics from "../hooks/useMetrics";
