@@ -6,7 +6,7 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { Feedback, Issue } from "@/types";
-import { AlertTriangle, BellRing, CheckCircle2, Timer } from "lucide-react";
+import { AlertTriangle, BellRing, Sparkles, Timer } from "lucide-react";
 import { NotifyAlert } from "./NotifyAlert";
 import { Badge } from "./ui/badge";
 
@@ -61,6 +61,7 @@ export function FeedbackDrawer({
             {/* Priority and Notification Status */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
+                <Badge variant="outline">{issue.source}</Badge>
                 <Badge variant={getPriorityVariant(issue.priority)}>
                   {issue.priority} Priority
                 </Badge>
@@ -101,7 +102,7 @@ export function FeedbackDrawer({
             {/* Actionable Insights */}
             <div className="space-y-2 bg-background border rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
-                <CheckCircle2 className="w-5 h-5 text-green-500" />
+                <Sparkles className="w-5 h-5 text-purple-600" />
                 <h4 className="font-medium">Actionable Insights</h4>
               </div>
               <p className="text-muted-foreground">
