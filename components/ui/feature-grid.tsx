@@ -9,12 +9,17 @@ interface Item {
 interface FeatureGridProps {
   title: string;
   items: Item[];
-  accentColor: "blue" | "red";
+  accentColor: "blue" | "red" | "green";
 }
 
 export function FeatureGrid({ title, items, accentColor }: FeatureGridProps) {
   const bgColor = accentColor === "blue" ? "bg-blue-50" : "bg-red-50";
-  const textColor = accentColor === "blue" ? "text-blue-500" : "text-red-500";
+  const textColor =
+    accentColor === "blue"
+      ? "text-blue-500"
+      : accentColor === "red"
+      ? "text-red-500"
+      : "text-green-500";
 
   return (
     <div className="space-y-8">

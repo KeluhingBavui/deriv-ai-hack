@@ -79,6 +79,27 @@ export default function LandingPage() {
     },
   ];
 
+  const businessValues = [
+    {
+      title: "Increased Efficiency",
+      description:
+        "Reduce feedback processing time by up to 80% with AI-powered automation",
+      icon: <Clock className="w-6 h-6" />,
+    },
+    {
+      title: "Better Customer Retention",
+      description:
+        "Improve response times and customer satisfaction by catching issues early",
+      icon: <BarChart2 className="w-6 h-6" />,
+    },
+    {
+      title: "Cost Reduction",
+      description:
+        "Lower operational costs through automated analysis and streamlined workflows",
+      icon: <Split className="w-6 h-6" />,
+    },
+  ];
+
   return (
     <div className={`min-h-screen overflow-hidden ${spaceGrotesk.className}`}>
       {/* Hero section - full height */}
@@ -101,29 +122,11 @@ export default function LandingPage() {
             </Button>
           </Link>
         </div>
-        <ScrollButton targetId="preview" />
+        <ScrollButton targetId="problems" />
       </section>
 
       {/* Main content sections - each full height */}
       <div className="space-y-0">
-        {/* Preview section */}
-        <section
-          id="preview"
-          className="min-h-screen relative flex items-center justify-center py-20"
-        >
-          <div className="max-w-5xl mx-auto px-4">
-            <WobbleCard>
-              <Image
-                src="/dashboard-preview.png"
-                alt="dashboard"
-                width={1400}
-                height={720}
-                className="rounded-lg border shadow-lg"
-              />
-            </WobbleCard>
-          </div>
-          <ScrollButton targetId="problems" />
-        </section>
         {/* Problems section */}
         <section
           id="problems"
@@ -138,6 +141,7 @@ export default function LandingPage() {
           </div>
           <ScrollButton targetId="solutions" />
         </section>
+
         {/* Solutions section */}
         <section
           id="solutions"
@@ -150,6 +154,47 @@ export default function LandingPage() {
               accentColor="blue"
             />
           </div>
+          <ScrollButton targetId="business-value" />
+        </section>
+
+        {/* Business Value section */}
+        <section
+          id="business-value"
+          className="min-h-screen relative flex items-center justify-center py-20 bg-gray-50"
+        >
+          <div className="max-w-5xl mx-auto px-4">
+            <FeatureGrid
+              title="Business Value"
+              items={businessValues}
+              accentColor="green"
+            />
+          </div>
+          <ScrollButton targetId="preview" />
+        </section>
+
+        {/* Preview section */}
+        <section
+          id="preview"
+          className="min-h-screen relative flex flex-col items-center justify-center py-20"
+        >
+          <div className="max-w-5xl mx-auto px-4">
+            <WobbleCard>
+              <Image
+                src="/dashboard-preview.png"
+                alt="dashboard"
+                width={1400}
+                height={720}
+                className="rounded-lg border shadow-lg"
+              />
+            </WobbleCard>
+          </div>
+          <Link href="/dashboard">
+            <Button size="lg" className="bg-blue-500 hover:bg-blue-600 mt-8">
+              Try Dashboard Now
+              <ArrowRight className="ml-2" />
+            </Button>
+          </Link>
+          <ScrollButton targetId="hero" direction="up" />
         </section>
       </div>
     </div>
