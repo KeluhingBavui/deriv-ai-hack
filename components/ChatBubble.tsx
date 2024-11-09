@@ -53,7 +53,7 @@ export default function ChatBubble() {
   return (
     <div className="fixed bottom-4 right-4 z-50">
       {isOpen ? (
-        <div className="w-96 h-[500px] bg-black border border-white/10 rounded-lg shadow-lg p-4">
+        <div className="w-96 h-[500px] bg-background border border-border rounded-lg shadow-lg p-4">
           <div className="flex justify-between items-center mb-4">
             <h3 className="font-medium">AI Assistant</h3>
             <button onClick={() => setIsOpen(false)}>
@@ -72,8 +72,8 @@ export default function ChatBubble() {
                 <div
                   className={`max-w-[80%] rounded-lg p-3 ${
                     message.role === 'user'
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-white/10'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted'
                   }`}
                 >
                   {message.content}

@@ -66,8 +66,8 @@ export function GaugeChart({ title, value, max, colors, unit = '%' }: GaugeChart
   }, [value, max, colors, unit]);
 
   return (
-    <div className="p-4 rounded-lg border border-white/10 bg-white/5">
-      <h3 className="text-sm text-white/60 mb-4">{title}</h3>
+    <div className="p-4 rounded-lg border border-border bg-card">
+      <h3 className="text-sm text-muted-foreground mb-4">{title}</h3>
       <div className="relative h-48">
         <canvas 
           ref={canvasRef} 

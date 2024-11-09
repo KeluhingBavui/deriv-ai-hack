@@ -9,8 +9,8 @@ export function SentimentIndicator({ positive, neutral, negative }: SentimentInd
   const getPercentage = (value: number) => ((value / total) * 100).toFixed(0);
 
   return (
-    <div className="p-4 rounded-lg border border-white/10 bg-white/5">
-      <h3 className="text-sm text-white/60 mb-4">Customer Sentiment</h3>
+    <div className="p-4 rounded-lg border border-border bg-card">
+      <h3 className="text-sm text-muted-foreground mb-4">Customer Sentiment</h3>
       <div className="flex flex-col items-center justify-center h-32 space-y-4">
         <div className="relative w-24 h-24 flex items-center justify-center">
           {/* Circular progress indicators */}

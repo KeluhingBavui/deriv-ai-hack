@@ -50,9 +50,9 @@ export function DataTable<TData, TValue>({
         selectedSentiment={selectedSentiment}
         onSentimentChange={setSelectedSentiment} 
       />
-      <div className="rounded-lg border border-white/10">
+      <div className="rounded-lg border border-border">
         <Table>
-          <TableHeader className="bg-white/5">
+          <TableHeader className="bg-muted/50">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (

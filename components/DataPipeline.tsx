@@ -116,7 +116,7 @@ export function DataPipeline({ onImportComplete }: DataPipelineProps) {
   }, []);
 
   return (
-    <div className="space-y-8 p-6 bg-white/5 rounded-lg border border-white/10">
+    <div className="space-y-8 p-6 bg-card rounded-lg border border-border">
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-semibold">Data Pipeline</h2>
         <Button
