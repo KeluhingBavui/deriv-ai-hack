@@ -10,6 +10,9 @@ export function useIssues() {
 
   const fetchIssues = useCallback(async () => {
     try {
+      setLoading(true);
+      // Simulate API delay
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await fetch("/api/issues");
       const data = await response.json();
       setIssues(data);

@@ -1,13 +1,19 @@
 "use client";
 
-import { useState } from "react";
 import { useIssues } from "@/hooks/useIssues";
-import { Filter } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Filter } from "lucide-react";
+import { useState } from "react";
+import { DataPipeline } from "./DataPipeline";
 
 export default function IssuesTable() {
   const { issues, loading, filteredIssues, setFilters } = useIssues();
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [isImported, setIsImported] = useState(false);
+
+  if (!isImported) {
+    return <DataPipeline onImportComplete={() => setIsImported(true)} />;
+  }
 
   if (loading) {
     return <div className="text-center py-4">Loading...</div>;
