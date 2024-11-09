@@ -56,7 +56,16 @@ export function DataTable<TData extends Issue, TValue>({
     }
   };
 
-  const toggleRow = async (issueId: string) => {
+  const toggleRow = async (issueId: string, event: React.MouseEvent) => {
+    // Check if the click target is a checkbox or its parent label
+    const target = event.target as HTMLElement;
+    if (
+      target.closest('[role="checkbox"]') ||
+      target.getAttribute("aria-label")?.includes("Select")
+    ) {
+      return;
+    }
+
     setExpandedRows((prev) => {
       const isExpanded = !prev[issueId];
       if (isExpanded && !feedbackData[issueId]) {
@@ -117,7 +126,7 @@ export function DataTable<TData extends Issue, TValue>({
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
                     className="hover:bg-white/5 cursor-pointer"
-                    onClick={() => toggleRow(row.original.id)}
+                    onClick={(e) => toggleRow(row.original.id, e)}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
