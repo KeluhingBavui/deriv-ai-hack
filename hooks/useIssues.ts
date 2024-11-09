@@ -74,6 +74,7 @@ export function useIssues() {
     return issues.filter((issue) => {
       if (filters.status && issue.sentiment !== filters.status) return false;
       if (filters.priority && issue.priority !== filters.priority) return false;
+      if (filters.source && issue.source !== filters.source) return false;
       return true;
     });
   }, [issues, filters]);

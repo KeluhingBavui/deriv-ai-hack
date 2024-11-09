@@ -13,6 +13,8 @@ export interface FilterOptions {
   status?: string;
   priority?: string;
   sentiment?: string;
+  source?: string;
+  team?: string;
   category?: string;
   dateRange?: {
     start: Date;

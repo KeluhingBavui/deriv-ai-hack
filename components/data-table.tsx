@@ -2,8 +2,10 @@
 
 import {
   ColumnDef,
+  SortingState,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
@@ -27,22 +29,41 @@ interface DataTableProps<TData extends Issue, TValue> {
   data: TData[];
 }
 
+// Move helper functions outside of the component
+const hasActiveFilters = (sentiment: string, source: string, team: string, sorting: SortingState) => {
+  return sentiment !== "all" || source !== "all" || team !== "all" || sorting.length > 0;
+};
+
 export function DataTable<TData extends Issue, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [selectedSentiment, setSelectedSentiment] = useState<string>("all");
+  const [selectedSource, setSelectedSource] = useState<string>("all");
+  const [selectedTeam, setSelectedTeam] = useState<string>("all");
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
-  const [feedbackData, setFeedbackData] = useState<Record<string, Feedback[]>>(
-    {}
-  );
+  const [feedbackData, setFeedbackData] = useState<Record<string, Feedback[]>>({});
+  const [sorting, setSorting] = useState<SortingState>([]);
 
-  // Filter the data based on selected sentiment
+  const handleReset = () => {
+    setSelectedSentiment("all");
+    setSelectedSource("all");
+    setSelectedTeam("all");
+    setSorting([]);
+  };
+
+  const showReset = hasActiveFilters(selectedSentiment, selectedSource, selectedTeam, sorting);
+
+  // Filter the data based on selected filters
   const filteredData = useMemo(() => {
-    if (selectedSentiment === "all") return data;
-    return data.filter((item) => item.sentiment === selectedSentiment);
-  }, [data, selectedSentiment]);
+    return data.filter((item) => {
+      const matchesSentiment = selectedSentiment === "all" || item.sentiment === selectedSentiment;
+      const matchesSource = selectedSource === "all" || item.source === selectedSource;
+      const matchesTeam = selectedTeam === "all" || item.team === selectedTeam;
+      return matchesSentiment && matchesSource && matchesTeam;
+    });
+  }, [data, selectedSentiment, selectedSource, selectedTeam]);
 
   const fetchFeedback = async (issueId: string) => {
     try {
@@ -84,10 +105,23 @@ export function DataTable<TData extends Issue, TValue>({
     columns,
     state: {
       rowSelection,
+      sorting,
     },
     enableRowSelection: true,
+    enableSorting: true,
+    enableMultiSort: false,
     onRowSelectionChange: setRowSelection,
+    onSortingChange: (updater) => {
+      // If it's a function, call it with current state
+      if (typeof updater === 'function') {
+        setSorting(updater(sorting));
+      } else {
+        // If it's a direct value, use it
+        setSorting(updater);
+      }
+    },
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   });
 
   const selectedRows = table
@@ -98,7 +132,13 @@ export function DataTable<TData extends Issue, TValue>({
     <div className="space-y-4">
       <DataTableToolbar
         selectedSentiment={selectedSentiment}
+        selectedSource={selectedSource}
+        selectedTeam={selectedTeam}
         onSentimentChange={setSelectedSentiment}
+        onSourceChange={setSelectedSource}
+        onTeamChange={setSelectedTeam}
+        onReset={handleReset}
+        showReset={showReset}
         exportButton={<ExportButton data={data} selectedRows={selectedRows} />}
       />
       <div className="rounded-lg border border-border">

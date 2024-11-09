@@ -3,7 +3,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 // import { cn } from "@/lib/utils";
 import { Issue } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { OctagonAlert } from "lucide-react";
+import { OctagonAlert, ArrowDownIcon, ArrowUpIcon, ChevronsUpDown } from "lucide-react";
+import { Button } from "./ui/button";
 
 export const columns: ColumnDef<Issue>[] = [
   {
@@ -69,7 +70,31 @@ export const columns: ColumnDef<Issue>[] = [
   },
   {
     accessorKey: "priority",
-    header: "Priority",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="flex items-center gap-1 p-0 hover:bg-transparent"
+          onClick={() => {
+            const currentSort = column.getIsSorted();
+            if (currentSort === false) {
+              column.toggleSorting(false); // set to ascending
+            } else if (currentSort === "asc") {
+              column.toggleSorting(true); // set to descending
+            } else {
+              column.clearSorting(); // clear sorting
+            }
+          }}
+        >
+          Priority
+          {{
+            asc: <ArrowUpIcon className="w-4 h-4 ml-1" />,
+            desc: <ArrowDownIcon className="w-4 h-4 ml-1" />,
+            false: <ChevronsUpDown className="w-4 h-4 ml-1 opacity-50" />,
+          }[column.getIsSorted() as string ?? "false"]}
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       const priority = row.getValue("priority") as string;
       return (
@@ -82,6 +107,12 @@ export const columns: ColumnDef<Issue>[] = [
           {priority === "Medium" && "→"} {priority}
         </Badge>
       );
+    },
+    sortingFn: (rowA, rowB) => {
+      const priorities = { High: 3, Medium: 2, Low: 1 };
+      const priorityA = priorities[rowA.getValue("priority") as keyof typeof priorities];
+      const priorityB = priorities[rowB.getValue("priority") as keyof typeof priorities];
+      return priorityA - priorityB;
     },
   },
 ];

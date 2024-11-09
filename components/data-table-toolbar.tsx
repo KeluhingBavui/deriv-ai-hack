@@ -5,16 +5,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 
 interface DataTableToolbarProps {
   selectedSentiment: string;
+  selectedSource: string;
+  selectedTeam: string;
   onSentimentChange: (value: string) => void;
+  onSourceChange: (value: string) => void;
+  onTeamChange: (value: string) => void;
+  onReset: () => void;
+  showReset: boolean;
   exportButton: React.ReactNode;
 }
 
 export function DataTableToolbar({
   selectedSentiment,
+  selectedSource,
+  selectedTeam,
   onSentimentChange,
+  onSourceChange,
+  onTeamChange,
+  onReset,
+  showReset,
   exportButton,
 }: DataTableToolbarProps) {
   return (
@@ -35,6 +49,40 @@ export function DataTableToolbar({
             <SelectItem value="Negative">Negative</SelectItem>
           </SelectContent>
         </Select>
+
+        <Select value={selectedSource} onValueChange={onSourceChange}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filter by source">
+              {selectedSource === "all" ? "All Sources" : selectedSource}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Sources</SelectItem>
+            <SelectItem value="Trust Pilot">Trust Pilot</SelectItem>
+            <SelectItem value="Live Chat">Live Chat</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={selectedTeam} onValueChange={onTeamChange}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filter by team">
+              {selectedTeam === "all" ? "All Teams" : selectedTeam}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Teams</SelectItem>
+            <SelectItem value="Finance">Finance</SelectItem>
+            <SelectItem value="Engineering">Engineering</SelectItem>
+            <SelectItem value="Support">Support</SelectItem>
+          </SelectContent>
+        </Select>
+
+        {showReset && (
+          <Button variant="ghost" size="lg" onClick={onReset} className="px-4">
+            Reset
+            <X className="ml-2 h-4 w-4" />
+          </Button>
+        )}
       </div>
       {exportButton}
     </div>
