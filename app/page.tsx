@@ -1,25 +1,40 @@
 "use client";
 
 import { BackgroundBeams } from "@/components/ui/background-beams";
+import { Boxes } from "@/components/ui/background-boxes";
 import { Button } from "@/components/ui/button";
+import { FeatureGrid } from "@/components/ui/feature-grid";
+import { ScrollButton } from "@/components/ui/scroll-button";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
-import { WavyBackground } from "@/components/ui/wavy-background";
+import { WobbleCard } from "@/components/ui/wobble-card";
+import {
+  AlertTriangle,
+  ArrowRight,
+  BarChart2,
+  Brain,
+  Clock,
+  MessageSquare,
+  Split,
+} from "lucide-react";
+import { Space_Grotesk } from "next/font/google";
+import Image from "next/image";
 import Link from "next/link";
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
 export default function LandingPage() {
   const words = [
-    {
-      text: "Customer",
-    },
-    {
-      text: "Feedback",
-    },
-    {
-      text: "Analysis",
-    },
-    {
-      text: "Dashboard",
-    },
+    { text: "Client" },
+    { text: "Automated" },
+    { text: "Sentiment" },
+    { text: "Classification" },
+    { text: "Analytics" },
+    { text: "Dynamic" },
+    { text: "Escalation" },
+    { text: "(CASCADE)" },
   ];
 
   const features = [
@@ -27,63 +42,116 @@ export default function LandingPage() {
       title: "Real-time Sentiment Analysis",
       description:
         "Instantly analyze customer feedback from multiple sources using AI",
+      icon: <Brain className="w-6 h-6" />,
     },
     {
       title: "Critical Issue Detection",
       description:
         "Automatically identify and notify teams of critical customer issues",
+      icon: <BarChart2 className="w-6 h-6" />,
     },
     {
       title: "Team Collaboration",
       description:
         "Streamline communication between support, engineering, and finance teams",
+      icon: <MessageSquare className="w-6 h-6" />,
+    },
+  ];
+
+  const problems = [
+    {
+      title: "Manual Feedback Analysis",
+      description:
+        "Teams waste hours manually reviewing and categorizing customer feedback across multiple channels",
+      icon: <Clock className="w-6 h-6" />,
+    },
+    {
+      title: "Delayed Response Times",
+      description:
+        "Critical issues often go unnoticed, leading to customer dissatisfaction and churn",
+      icon: <AlertTriangle className="w-6 h-6" />,
+    },
+    {
+      title: "Siloed Communication",
+      description:
+        "Lack of coordination between teams results in redundant work and missed opportunities",
+      icon: <Split className="w-6 h-6" />,
     },
   ];
 
   return (
-    <div className="min-h-screen bg-black overflow-hidden">
-      <BackgroundBeams />
-
-      {/* Hero Section */}
-      <div className="h-[80vh] relative flex flex-col items-center justify-center">
-        <div className="text-center space-y-8 relative z-10">
+    <div className={`min-h-screen overflow-hidden ${spaceGrotesk.className}`}>
+      {/* Hero section - full height */}
+      <section
+        id="hero"
+        className="h-screen relative flex flex-col items-center justify-center"
+      >
+        <BackgroundBeams className="opacity-20" />
+        <Boxes className="absolute inset-0 opacity-20" />
+        <div className="text-center space-y-8 relative z-10 max-w-4xl">
           <TypewriterEffect words={words} />
-          <p className="text-neutral-300 max-w-lg mx-auto">
+          <p className="max-w-lg mx-auto text-lg">
             Transform customer feedback into actionable insights with our
             AI-powered dashboard.
           </p>
           <Link href="/dashboard">
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-blue-500 to-blue-700"
-            >
+            <Button size="lg" className="bg-blue-500 hover:bg-blue-600 mt-8">
               Launch Dashboard
+              <ArrowRight className="ml-2" />
             </Button>
           </Link>
         </div>
-      </div>
+        <ScrollButton targetId="preview" />
+      </section>
 
-      {/* Features Section */}
-      <WavyBackground className="max-w-4xl mx-auto px-8">
-        <div className="space-y-16 pb-20">
-          <h2 className="text-3xl font-bold text-center text-white">
-            Key Features
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {features.map((feature) => (
-              <div
-                key={feature.title}
-                className="relative group rounded-xl border border-white/10 p-6 hover:border-white/30 transition"
-              >
-                <h3 className="text-xl font-semibold text-white mb-3">
-                  {feature.title}
-                </h3>
-                <p className="text-neutral-300">{feature.description}</p>
-              </div>
-            ))}
+      {/* Main content sections - each full height */}
+      <div className="space-y-0">
+        {/* Preview section */}
+        <section
+          id="preview"
+          className="min-h-screen relative flex items-center justify-center py-20"
+        >
+          <div className="max-w-5xl mx-auto px-4">
+            <WobbleCard>
+              <Image
+                src="/dashboard-preview.png"
+                alt="dashboard"
+                width={1400}
+                height={720}
+                className="rounded-lg border shadow-lg"
+              />
+            </WobbleCard>
           </div>
-        </div>
-      </WavyBackground>
+          <ScrollButton targetId="problems" />
+        </section>
+        {/* Problems section */}
+        <section
+          id="problems"
+          className="min-h-screen relative flex items-center justify-center py-20 bg-gray-50"
+        >
+          <div className="max-w-5xl mx-auto px-4">
+            <FeatureGrid
+              title="Problems We Solve"
+              items={problems}
+              accentColor="red"
+            />
+          </div>
+          <ScrollButton targetId="solutions" />
+        </section>
+        {/* Solutions section */}
+        <section
+          id="solutions"
+          className="min-h-screen relative flex items-center justify-center py-20"
+        >
+          <div className="max-w-5xl mx-auto px-4">
+            <FeatureGrid
+              title="Our Solutions"
+              items={features}
+              accentColor="blue"
+            />
+          </div>
+        </section>
+      </div>
     </div>
   );
 }
