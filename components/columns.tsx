@@ -27,6 +27,7 @@ export const columns: ColumnDef<Issue>[] = [
     enableHiding: false,
   },
   {
+    id: "sentiment",
     accessorKey: "sentiment",
     header: "Task",
     cell: ({ row }) => {
