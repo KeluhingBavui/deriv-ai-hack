@@ -135,7 +135,7 @@ export function DataPipeline({ onImportComplete }: DataPipelineProps) {
             );
           }}
           disabled={isImporting}
-          variant="outline"
+          variant="default"
         >
           Import Data
         </Button>

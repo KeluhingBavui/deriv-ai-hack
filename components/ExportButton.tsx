@@ -48,7 +48,7 @@ export function ExportButton({ data, selectedRows }: ExportButtonProps) {
   };
 
   return (
-    <Button variant="outline" onClick={handleExport}>
+    <Button variant="default" onClick={handleExport}>
       <Download className="w-4 h-4 mr-2" />
       Export CSV{" "}
       {selectedRows.length > 0 && `(${selectedRows.length} selected)`}
