@@ -2,7 +2,7 @@
 
 import { useIssues } from "@/hooks/useIssues";
 import { notifyCriticalIssues } from "@/lib/notifyIssue";
-import { Trash2 } from "lucide-react";
+import { RefreshCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CriticalIssueNotification } from "./CriticalIssueNotification";
 import { DataPipeline } from "./DataPipeline";
@@ -48,8 +48,8 @@ export default function IssuesTable() {
     <div className="space-y-4">
       <div className="flex justify-end">
         <Button variant="destructive" size="sm" onClick={handleClearData}>
-          <Trash2 className="w-4 h-4 mr-2" />
-          Clear Data
+          <RefreshCcw className="w-4 h-4 mr-1" />
+          Refresh Data
         </Button>
       </div>
 

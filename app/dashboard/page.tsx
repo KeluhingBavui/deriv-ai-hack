@@ -6,9 +6,7 @@ export default function DashboardPage() {
     <main className="min-h-screen p-8">
       <div className="max-w-[1400px] mx-auto space-y-8">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">
-            Customer Satisfaction Dashboard
-          </h1>
+          <h1 className="text-2xl font-bold">CASCADE Dashboard</h1>
         </div>
         <DashboardMetrics />
         <IssuesTable />
