@@ -1,302 +1,244 @@
 import { PrismaClient } from "@prisma/client";
-
 const prisma = new PrismaClient();
 
-const issues = [
-  {
-    sentiment: "Positive",
-    source: "Trust Pilot",
-    description: "Great customer service experience with the support team",
-    critical: false,
-    team: "Support",
-    priority: "Medium",
-    notified: false,
-    notifiedAt: null,
-  },
-  {
-    sentiment: "Negative",
-    source: "Live Chat",
-    description: "Payment processing failed multiple times",
-    critical: true,
-    team: "Finance",
-    priority: "High",
-    notified: true,
-    notifiedAt: new Date(),
-  },
-  {
-    sentiment: "Neutral",
-    source: "Trust Pilot",
-    description: "Product works as expected but could use more features",
-    critical: false,
-    team: "Engineering",
-    priority: "Low",
-    notified: false,
-    notifiedAt: null,
-  },
-  {
-    sentiment: "Positive",
-    source: "Live Chat",
-    description: "New dashboard feature is very intuitive",
-    critical: false,
-    team: "Engineering",
-    priority: "Medium",
-    notified: false,
-    notifiedAt: null,
-  },
-  {
-    sentiment: "Negative",
-    source: "Trust Pilot",
-    description: "Unable to access account after password reset",
-    critical: true,
-    team: "Engineering",
-    priority: "High",
-    notified: true,
-    notifiedAt: new Date(),
-  },
-  {
-    sentiment: "Neutral",
-    source: "Live Chat",
-    description: "Question about pricing tiers",
-    critical: false,
-    team: "Finance",
-    priority: "Low",
-    notified: false,
-    notifiedAt: null,
-  },
-  {
-    sentiment: "Positive",
-    source: "Trust Pilot",
-    description: "Integration with third-party tools works perfectly",
-    critical: false,
-    team: "Engineering",
-    priority: "Medium",
-    notified: false,
-    notifiedAt: null,
-  },
-  {
-    sentiment: "Negative",
-    source: "Live Chat",
-    description: "System downtime affecting critical operations",
-    critical: true,
-    team: "Engineering",
-    priority: "High",
-    notified: true,
-    notifiedAt: new Date(),
-  },
-];
-
-const users = [
-  {
-    age: 28,
-    tradingStyle: "day trading",
-    expertiseLevel: "intermediate",
-    region: "North America",
-    preferredContact: "email",
-    platformUsage: 4.5,
-    npsScore: 8,
-    csatScore: 4,
-    cesScore: 2,
-    recentlyReportedIssue: false,
-    feedbackFrequency: 3,
-    accountAge: 12,
-    lastAction: "Feature request acknowledged",
-    deltaNps: 0.5,
-    deltaCsat: 0.3,
-    deltaCes: -0.2,
-    simulationDate: new Date("2024-03-15"),
-    lastFeedbackDate: new Date("2024-03-10"),
-  },
-  {
-    age: 35,
-    tradingStyle: "swing trading",
-    expertiseLevel: "expert",
-    region: "Europe",
-    preferredContact: "phone",
-    platformUsage: 6.2,
-    npsScore: 9,
-    csatScore: 5,
-    cesScore: 1,
-    recentlyReportedIssue: true,
-    feedbackFrequency: 5,
-    accountAge: 24,
-    lastAction: "UI update implemented",
-    deltaNps: 1.0,
-    deltaCsat: 0.5,
-    deltaCes: -0.5,
-    simulationDate: new Date("2024-03-14"),
-    lastFeedbackDate: new Date("2024-03-12"),
-  },
-  {
-    age: 22,
-    tradingStyle: "position trading",
-    expertiseLevel: "beginner",
-    region: "Asia",
-    preferredContact: "email",
-    platformUsage: 2.8,
-    npsScore: 6,
-    csatScore: 3,
-    cesScore: 4,
-    recentlyReportedIssue: false,
-    feedbackFrequency: 1,
-    accountAge: 3,
-    lastAction: "Tutorial completed",
-    deltaNps: 1.5,
-    deltaCsat: 0.8,
-    deltaCes: -1.0,
-    simulationDate: new Date("2024-03-13"),
-    lastFeedbackDate: new Date("2024-03-08"),
-  },
-];
-
-// Add feedback content templates
-const feedbackTemplates = [
-  {
-    content: "The system was down again today",
-    sentiment: "Negative",
-    issueType: "downtime",
-  },
-  {
-    content: "Love the new dashboard features",
-    sentiment: "Positive",
-    issueType: "features",
-  },
-  {
-    content: "Payment processing is still problematic",
-    sentiment: "Negative",
-    issueType: "payment",
-  },
-  {
-    content: "Customer support was very helpful",
-    sentiment: "Positive",
-    issueType: "support",
-  },
-  {
-    content: "The platform could use more advanced trading tools",
-    sentiment: "Neutral",
-    issueType: "features",
-  },
-  {
-    content: "Had trouble resetting my password",
-    sentiment: "Negative",
-    issueType: "access",
-  },
-  {
-    content: "Integration with my tools works great",
-    sentiment: "Positive",
-    issueType: "integration",
-  },
-];
-
-// Generate more users (total 20)
-const generateMoreUsers = () => {
-  const tradingStyles = [
-    "day trading",
-    "swing trading",
-    "position trading",
-    "scalping",
-    "algorithmic trading",
-  ];
-  const expertiseLevels = [
-    "beginner",
-    "intermediate",
-    "expert",
-    "professional",
-  ];
-  const regions = [
-    "North America",
-    "Europe",
-    "Asia",
-    "South America",
-    "Africa",
-    "Oceania",
-  ];
-  const contacts = ["email", "phone", "chat", "social media"];
-  const actions = [
-    "Feature request",
-    "Bug report",
-    "Support ticket",
-    "Tutorial completed",
-    "Settings updated",
-  ];
-
-  const additionalUsers = Array.from({ length: 17 }, () => ({
-    age: Math.floor(Math.random() * (65 - 18) + 18),
-    tradingStyle:
-      tradingStyles[Math.floor(Math.random() * tradingStyles.length)],
-    expertiseLevel:
-      expertiseLevels[Math.floor(Math.random() * expertiseLevels.length)],
-    region: regions[Math.floor(Math.random() * regions.length)],
-    preferredContact: contacts[Math.floor(Math.random() * contacts.length)],
-    platformUsage: Number((Math.random() * 8 + 1).toFixed(1)),
-    npsScore: Math.floor(Math.random() * 11),
-    csatScore: Math.floor(Math.random() * 6),
-    cesScore: Math.floor(Math.random() * 6),
-    recentlyReportedIssue: Math.random() > 0.7,
-    feedbackFrequency: Math.floor(Math.random() * 10),
-    accountAge: Math.floor(Math.random() * 36),
-    lastAction: actions[Math.floor(Math.random() * actions.length)],
-    deltaNps: Number((Math.random() * 2 - 1).toFixed(1)),
-    deltaCsat: Number((Math.random() * 2 - 1).toFixed(1)),
-    deltaCes: Number((Math.random() * 2 - 1).toFixed(1)),
-    simulationDate: new Date(
-      Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000
-    ),
-    lastFeedbackDate: new Date(
-      Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000
-    ),
-  }));
-
-  return [...users, ...additionalUsers];
-};
-
 async function main() {
-  console.log("Start seeding...");
-
-  // Clear existing data
-  await prisma.feedback.deleteMany();
-  await prisma.issue.deleteMany();
-  await prisma.user.deleteMany();
-
-  // Insert issues
-  const createdIssues = await Promise.all(
-    issues.map((issue) => prisma.issue.create({ data: issue }))
-  );
-
-  // Insert users
-  const allUsers = generateMoreUsers();
-  const createdUsers = await Promise.all(
-    allUsers.map((user) => prisma.user.create({ data: user }))
-  );
-
-  // Generate and insert feedback
-  const feedbackData = Array.from({ length: 50 }, () => {
-    const user = createdUsers[Math.floor(Math.random() * createdUsers.length)];
-    const issue =
-      Math.random() > 0.3
-        ? createdIssues[Math.floor(Math.random() * createdIssues.length)]
-        : null;
-    const template =
-      feedbackTemplates[Math.floor(Math.random() * feedbackTemplates.length)];
-
-    return {
-      userId: user.id,
-      content: template.content,
-      sentiment: template.sentiment,
-      issueId: issue?.id || null,
-      createdAt: new Date(
-        Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000
-      ),
-    };
+  // Creating Users with Feedbacks
+  const user1 = await prisma.user.create({
+    data: {
+      age: 45,
+      tradingStyle: "Long-term",
+      expertiseLevel: "Advanced",
+      region: "North America",
+      preferredContact: "Email",
+      platformUsage: 0.9,
+      npsScore: 9,
+      csatScore: 8,
+      cesScore: 7,
+      recentlyReportedIssue: false,
+      feedbackFrequency: 5,
+      accountAge: 10,
+      lastAction: "Withdrawal",
+      deltaNps: 0.1,
+      deltaCsat: -0.2,
+      deltaCes: 0.0,
+      simulationDate: new Date(),
+      lastFeedbackDate: new Date(),
+      feedbacks: {
+        create: [
+          {
+            content:
+              "Best broker in town working with deriv from last 10 years. Best & reliable platform for trading having unique assets like vol crash boom step etc also all other pairs gold btc are also available with very low spread and fee. Also 24 7 support team and live chat support make it more reliable and flexible to work with so far great experience and most recommended broker to trade...",
+            sentiment: "Positive",
+          },
+          {
+            content:
+              "It's been great trading with deriv. It has all good qualities; the withdrawals system is very good and easy to navigate. I like the tight spreads as it increases the good chances to make profit, even though there's risk. But I am grateful to trade with deriv and am happy with their honesty and integrity.",
+            sentiment: "Positive",
+          },
+          {
+            content:
+              "Hello Deriv. I really appreciate this product. I buy and sell anytime I want, and I greatly appreciate the security attached to it. Even if a complaint is raised, you thoroughly investigate and make an informed decision. I have never lost money here! This is a very good site.",
+            sentiment: "Positive",
+          },
+        ],
+      },
+    },
+    include: {
+      feedbacks: true
+    }
   });
 
-  await Promise.all(
-    feedbackData.map((feedback) => prisma.feedback.create({ data: feedback }))
-  );
+  const user2 = await prisma.user.create({
+    data: {
+      age: 28,
+      tradingStyle: "Short-term",
+      expertiseLevel: "Intermediate",
+      region: "Asia",
+      preferredContact: "Phone",
+      platformUsage: 0.6,
+      npsScore: 3,
+      csatScore: 4,
+      cesScore: 6,
+      recentlyReportedIssue: true,
+      feedbackFrequency: 3,
+      accountAge: 5,
+      lastAction: "Trade",
+      deltaNps: -0.5,
+      deltaCsat: -0.3,
+      deltaCes: -0.1,
+      simulationDate: new Date(),
+      lastFeedbackDate: new Date(),
+      feedbacks: {
+        create: [
+          {
+            content:
+              "I'd never trade in their platform again, Deriv X...placed 2 V75s SELL, and then I'm taken out by 2 BUY TRADES that I never placed...to make it worse, they say I gave my credentials to somebody else. I stay alone and nobody knows I'm trading. I've never shared my details with anyone. It was cool, but they're never gonna see my money again because this was not the first time. I reverse any good rating I once gave them even though it was after a similar incident.",
+            sentiment: "Negative",
+          },
+          {
+            content:
+              "My trading account (Cr3851681) has been unfairly and permanently blocked by Deriv. Their reasoning? 'Excessive deposits and withdrawals.' I have incurred a loss of nearly $1500 USD in the last six months, yet Deriv seems unbothered by the damage done to its customers. Deriv appears to want traders who risk big, lose big, and ultimately boost their profits. It’s absurd and disappointing.",
+            sentiment: "Negative",
+          },
+          {
+            content:
+              "Deriv is not honest. They manipulate their derived instrument. They cheat very well—you will never make profit with deriv. The house always wins. Scam, thieves...no fair play. If you want to be poor, trade with deriv.",
+            sentiment: "Negative",
+          },
+        ],
+      },
+    },
+    include: {
+      feedbacks: true
+    }
+  });
 
-  console.log(`Created ${createdIssues.length} issues`);
-  console.log(`Created ${createdUsers.length} users`);
-  console.log(`Created ${feedbackData.length} feedback entries`);
-  console.log("Seeding finished.");
+  const user3 = await prisma.user.create({
+    data: {
+      age: 42,
+      tradingStyle: "Scalping",
+      expertiseLevel: "Expert",
+      region: "Europe",
+      preferredContact: "Email",
+      platformUsage: 0.9,
+      npsScore: 8,
+      csatScore: 7,
+      cesScore: 6,
+      recentlyReportedIssue: false,
+      feedbackFrequency: 2,
+      accountAge: 12,
+      lastAction: "Deposit",
+      deltaNps: 0.2,
+      deltaCsat: 0.1,
+      deltaCes: -0.2,
+      simulationDate: new Date(),
+      lastFeedbackDate: new Date(),
+      feedbacks: {
+        create: [
+          {
+            content:
+              "My cashier is locked. On live chat, I was told it's because I shared payment method with another customer. I didn't share my payment method with anyone. Though I had a past account, which is deleted now, that shared the same payment method with my present account. A ticket has been raised already, and there's no response yet. I will update to 5 stars when my issue is resolved.",
+            sentiment: "Neutral",
+          },
+          {
+            content:
+              "Hello Deriv, I really appreciate this product. I buy and sell anytime I want, and I greatly appreciate the security attached to it. However, when a complaint is raised, you thoroughly investigate and make an informed decision, although sometimes it feels slow.",
+            sentiment: "Neutral",
+          },
+        ],
+      },
+    },
+    include: {
+      feedbacks: true
+    }
+  });
+
+  const user4 = await prisma.user.create({
+    data: {
+      age: 30,
+      tradingStyle: "Swing",
+      expertiseLevel: "Beginner",
+      region: "Africa",
+      preferredContact: "Chat",
+      platformUsage: 0.7,
+      npsScore: 5,
+      csatScore: 6,
+      cesScore: 5,
+      recentlyReportedIssue: false,
+      feedbackFrequency: 4,
+      accountAge: 3,
+      lastAction: "Customer Support",
+      deltaNps: -0.1,
+      deltaCsat: 0.0,
+      deltaCes: 0.3,
+      simulationDate: new Date(),
+      lastFeedbackDate: new Date(),
+      feedbacks: {
+        create: [
+          {
+            content:
+              "Deriv is great; the transactions are seamless, and they are dependable. Improvements that can be made: remove the delay on entries to make them instant, add candlesticks of durations 5s, 10s, 15s, and 30s, and include Volatility 10 (1s), 25 (1s), 50 (1s), 75 (1s), and 100 (1s) indices in the trading view platform.",
+            sentiment: "Neutral",
+          },
+          {
+            content:
+              "Execution of trades is easy, and the platform portal is user-friendly. Depositing is easy. NB: Please share trading strategy for your loyalty customers.",
+            sentiment: "Positive",
+          },
+        ],
+      },
+    },
+    include: {
+      feedbacks: true
+    }
+  });
+
+  // Create Issues based on grouped Feedbacks
+  await prisma.issue.create({
+    data: {
+      sentiment: "Positive",
+      source: "Customer Feedback",
+      description: "Reliability and Trustworthiness of Platform",
+      critical: false,
+      team: "Customer Success",
+      priority: "Medium",
+      feedbacks: {
+        connect: [
+          { id: user1.feedbacks[0].id },
+          { id: user1.feedbacks[1].id },
+          { id: user1.feedbacks[2].id },
+        ],
+      },
+    },
+  });
+
+  await prisma.issue.create({
+    data: {
+      sentiment: "Negative",
+      source: "Customer Feedback",
+      description: "Platform Manipulation and Integrity Concerns",
+      critical: true,
+      team: "Risk and Compliance",
+      priority: "High",
+      feedbacks: {
+        connect: [
+          { id: user2.feedbacks[0].id },
+          { id: user2.feedbacks[1].id },
+          { id: user2.feedbacks[2].id },
+        ],
+      },
+    },
+  });
+
+  await prisma.issue.create({
+    data: {
+      sentiment: "Neutral",
+      source: "Customer Feedback",
+      description: "Customer Support and Communication Delays",
+      critical: false,
+      team: "Customer Support",
+      priority: "Medium",
+      feedbacks: {
+        connect: [{ id: user3.feedbacks[0].id }, { id: user3.feedbacks[1].id }],
+      },
+    },
+  });
+
+  await prisma.issue.create({
+    data: {
+      sentiment: "Neutral",
+      source: "Customer Feedback",
+      description: "Platform Functionality and Trading Options",
+      critical: false,
+      team: "Product",
+      priority: "Low",
+      feedbacks: {
+        connect: [{ id: user4.feedbacks[0].id }, { id: user4.feedbacks[1].id }],
+      },
+    },
+  });
+
+  console.log("Seeding completed.");
 }
 
 main()
