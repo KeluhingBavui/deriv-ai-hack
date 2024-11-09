@@ -1,65 +1,80 @@
-"use client"
+"use client";
 
-import { useState, useCallback } from 'react';
-import { Issue, FilterOptions } from '@/types';
-
-const MOCK_ISSUES: Issue[] = [
-  {
-    id: 'TP-8782',
-    sentiment: 'Positive',
-    source: 'Trust Pilot',
-    description: 'The SAS interface is down, bypass the open-source pixel so we can back up the PN',
-    critical: true,
-    team: 'Finance',
-    priority: 'Medium'
-  },
-  {
-    id: 'LC-7878',
-    sentiment: 'Negative',
-    source: 'Live Chat',
-    description: 'The SAS interface is down, bypass the open-source pixel so we can back up the PN',
-    team: 'Engineering',
-    priority: 'Medium'
-  },
-  {
-    id: 'TP-7839',
-    sentiment: 'Negative',
-    source: 'Trust Pilot',
-    description: 'The SAS interface is down, bypass the open-source pixel so we can back up the PN',
-    critical: true,
-    team: 'Finance',
-    priority: 'High'
-  },
-  // Add 7 more similar entries with varied data
-];
+import { FilterOptions, Issue } from "@/types";
+import { useCallback, useState } from "react";
 
 export function useIssues() {
-  const [issues, setIssues] = useState<Issue[]>(MOCK_ISSUES);
+  const [issues, setIssues] = useState<Issue[]>([]);
   const [filters, setFilters] = useState<FilterOptions>({});
+  const [loading, setLoading] = useState(true);
+
+  const fetchIssues = useCallback(async () => {
+    try {
+      const response = await fetch("/api/issues");
+      const data = await response.json();
+      setIssues(data);
+    } catch (error) {
+      console.error("Error fetching issues:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const createIssue = async (data: Omit<Issue, "id">) => {
+    try {
+      const response = await fetch("/api/issues", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const newIssue = await response.json();
+      setIssues((prev) => [...prev, newIssue]);
+    } catch (error) {
+      console.error("Error creating issue:", error);
+    }
+  };
+
+  const updateIssue = async (id: string, data: Partial<Issue>) => {
+    try {
+      const response = await fetch(`/api/issues/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const updatedIssue = await response.json();
+      setIssues((prev) =>
+        prev.map((issue) => (issue.id === id ? updatedIssue : issue))
+      );
+    } catch (error) {
+      console.error("Error updating issue:", error);
+    }
+  };
+
+  const deleteIssue = async (id: string) => {
+    try {
+      await fetch(`/api/issues/${id}`, { method: "DELETE" });
+      setIssues((prev) => prev.filter((issue) => issue.id !== id));
+    } catch (error) {
+      console.error("Error deleting issue:", error);
+    }
+  };
 
   const filteredIssues = useCallback(() => {
-    return issues.filter(issue => {
+    return issues.filter((issue) => {
       if (filters.status && issue.sentiment !== filters.status) return false;
       if (filters.priority && issue.priority !== filters.priority) return false;
       return true;
     });
   }, [issues, filters]);
 
-  const exportToCSV = useCallback(() => {
-    const filtered = filteredIssues();
-    const headers = ['ID', 'Sentiment', 'Source', 'Description', 'Team', 'Priority', 'Critical'];
-    const csvContent = filtered.map(issue => 
-      [issue.id, issue.sentiment, issue.source, issue.description, issue.team, issue.priority, issue.critical].join(',')
-    );
-    
-    const csv = [headers.join(','), ...csvContent].join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'customer-issues.csv';
-    a.click();
-  }, [filteredIssues]);
-
-  return { issues, filteredIssues, setFilters, exportToCSV };
-} 
+  return {
+    issues,
+    loading,
+    filteredIssues,
+    setFilters,
+    createIssue,
+    updateIssue,
+    deleteIssue,
+    fetchIssues,
+  };
+}
