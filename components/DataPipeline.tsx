@@ -1,6 +1,11 @@
 import { ArrowRight, Brain, Database, TableProperties } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+} from "@/components/ui/card"
 
 interface PipelineStep {
   id: string;
@@ -139,28 +144,32 @@ export function DataPipeline({ onImportComplete }: DataPipelineProps) {
       <div className="grid grid-cols-3 gap-4">
         {steps.map((step, index) => (
           <div key={step.id} className="relative">
-            <div
+            <Card
               className={`
-              p-4 rounded-lg border transition-all duration-300
-              ${
+              transition-all duration-300 h-full
+              ${  
                 step.status === "processing"
                   ? "border-blue-500 bg-blue-500/10"
                   : step.status === "completed"
                   ? "border-green-500 bg-green-500/10"
-                  : "border-white/10 bg-white/5"
+                  : ""
               }
             `}
             >
-              <div className="flex items-center gap-3 mb-2">
-                {step.icon}
-                <h3 className="font-medium">{step.title}</h3>
-              </div>
-              <p className="text-sm text-white/60">
-                {step.status === "processing"
-                  ? currentMessage
-                  : step.description}
-              </p>
-            </div>
+              <CardHeader className="pb-2">
+                <div className="flex items-center gap-3">
+                  {step.icon}
+                  <h3 className="font-medium">{step.title}</h3>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm">
+                  {step.status === "processing"
+                    ? currentMessage
+                    : step.description}
+                </p>
+              </CardContent>
+            </Card>
 
             {index < steps.length - 1 && (
               <div className="absolute top-1/2 -right-6 transform -translate-y-1/2">
