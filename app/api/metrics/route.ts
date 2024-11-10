@@ -7,10 +7,11 @@ export async function GET() {
 
     // Calculate averages
     const nps =
-      users.reduce((acc, user) => acc + user.npsScore, 0) / users.length;
-    const csat = users.reduce((acc, user) => acc + user.csatScore, 0);
+      users.reduce((acc, user) => acc + Number(user.npsScore), 0) / users.length;
+    const csat =
+      users.reduce((acc, user) => acc + Number(user.csatScore), 0);
     const ces =
-      users.reduce((acc, user) => acc + user.cesScore, 0) / users.length;
+      users.reduce((acc, user) => acc + Number(user.cesScore), 0) / users.length;
 
     // Calculate sentiment from feedback
     const feedback = await prisma.feedback.findMany();
